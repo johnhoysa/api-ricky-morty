@@ -11,7 +11,7 @@ fetch(apiURL)
     family.forEach((member) => {
       const card = document.createElement('div');
       //card.className = 'card';
-      card.classList.add('bg-white', 'rounded-md', 'p-2');
+      card.classList.add('bg-white', 'rounded-md', 'p-4', 'cursor-pointer');
       card.innerHTML = `
             <img class="w-full rounded-md" src="${member.image}" alt="${member.name}">
             <h3 class="mt-2 text-center text-base">${member.name}</h3>
@@ -46,9 +46,10 @@ function showCharactersByFirstName(firstName) {
         card.classList.add(
           'bg-white',
           'rounded-md',
-          'p-2',
+          'p-4',
           'mt-4',
-          'text-center'
+          'text-center',
+          'cursor-pointer'
         );
         card.innerHTML = `
               <img class="w-full rounded-md" src="${char.image}" alt="${char.name}">
