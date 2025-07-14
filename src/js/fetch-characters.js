@@ -10,11 +10,11 @@ fetch(apiURL)
     // Create card for each member
     family.forEach((member) => {
       const card = document.createElement('div');
-      card.className = 'card';
+      //card.className = 'card';
+      card.classList.add('bg-white', 'rounded-md', 'p-2');
       card.innerHTML = `
-            <img src="${member.image}" alt="${member.name}">
-            <h3>${member.name}</h3>
-            
+            <img class="w-full rounded-md" src="${member.image}" alt="${member.name}">
+            <h3 class="mt-2 text-center text-base">${member.name}</h3>
           `;
       // On card click
       card.addEventListener('click', () => {
@@ -30,7 +30,9 @@ fetch(apiURL)
 // search for member and show alternate characters.
 function showCharactersByFirstName(firstName) {
   const results = document.getElementById('results');
-  results.innerHTML = `<h2>So which "${firstName}" is your favorite?</h2><div class="related" id="relatedList">Loading...</div>`;
+  results.innerHTML = `
+  <h2 class="text-center mt-4 text-xl text-white">So which "${firstName}" is your favorite "${firstName}"?</h2>
+  <div class="flex flex-wrap gap-4 justify-center" id="relatedList">Loading...</div>`;
 
   // lets fetch content related to the first name
   fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
@@ -41,10 +43,16 @@ function showCharactersByFirstName(firstName) {
 
       data.results.forEach((char) => {
         const card = document.createElement('div');
-        card.className = 'related-card';
+        card.classList.add(
+          'bg-white',
+          'rounded-md',
+          'p-2',
+          'mt-4',
+          'text-center'
+        );
         card.innerHTML = `
-              <img src="${char.image}" alt="${char.name}">
-              <h4>${char.name}</h4>
+              <img class="w-full rounded-md" src="${char.image}" alt="${char.name}">
+              <h4 class="text-base">${char.name}</h4>
               <p class="text-sm">${char.species}</p>
             `;
         list.appendChild(card);
