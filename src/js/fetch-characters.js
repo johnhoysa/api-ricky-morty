@@ -31,7 +31,7 @@ fetch(apiURL)
 function showCharactersByFirstName(firstName) {
   const results = document.getElementById('results');
   results.innerHTML = `
-  <h2 class="text-center mt-4 text-xl">So which "${firstName}" is your favorite?</h2>
+  <h2 class="text-center mt-4 text-xl text-white">So which "${firstName}" is your favorite "${firstName}"?</h2>
   <div class="flex flex-wrap gap-4 justify-center" id="relatedList">Loading...</div>`;
 
   // lets fetch content related to the first name
