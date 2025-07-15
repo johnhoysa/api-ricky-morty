@@ -5,6 +5,9 @@ const appContainer = document.getElementById('app');
 
 // Button action
 getData.addEventListener('click', () => {
+  // Disable
+  getData.disabled = true;
+
   // add html to page
   const html = `
   <h2 class="mt-8 text-xl text-center text-white">Which is your favorite character?</h2>
