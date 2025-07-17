@@ -34,11 +34,12 @@ getData.addEventListener('click', () => {
       family.forEach((member, index) => {
         const card = document.createElement('div');
 
+        const halfIndex = Math.floor(family.length / 2);
+
         // once data is recived scroll user to the section
         gsap.to(window, {
           duration: 0.5,
           scrollTo: '#app',
-          offsetY: 150,
           ease: 'power2.inOut'
         });
 
@@ -57,6 +58,54 @@ getData.addEventListener('click', () => {
           delay: index * 0.2, // Stagger delay based on index
           ease: 'power2.out' // Easing function
         });
+
+        card.addEventListener('mouseenter', () => {
+          // Clear previous tweens on this element
+          gsap.killTweensOf(card);
+          //
+          if (index < halfIndex) {
+            // Animation A: slide left and rotate
+            gsap.to(card, {
+              scale: 1.02,
+              backgroundColor: '#7CE158',
+              rotation: -4,
+              duration: 0.3,
+              ease: 'ease.out'
+            });
+          } else if (index > halfIndex) {
+            // Animation B: slide right and rotate opposite
+            gsap.to(card, {
+              scale: 1.02,
+              backgroundColor: '#7CE158',
+              rotation: 4,
+              duration: 0.3,
+              ease: 'ease.out'
+            });
+          } else {
+            // Animation C: scale and bounce
+            gsap.to(card, {
+              scale: 1.02,
+              backgroundColor: '#7CE158',
+              y: -8,
+              duration: 0.3,
+              ease: 'ease.out'
+            });
+          }
+        }); // Event Listener
+
+        // On mouse leave
+        card.addEventListener('mouseleave', () => {
+          // REset so only need one animation
+          gsap.to(card, {
+            scale: 1,
+            backgroundColor: '#ffffff',
+            rotation: 0,
+            y: 0,
+            duration: 0.3,
+            ease: 'ease.out'
+          });
+        });
+
         // On card click
         card.addEventListener('click', () => {
           const firstName = member.name.split(' ')[0];
@@ -66,7 +115,6 @@ getData.addEventListener('click', () => {
           gsap.to(window, {
             duration: 0.5,
             scrollTo: '#results',
-            offsetY: 196,
             delay: 0.5,
             ease: 'ease.inOut'
           });
@@ -80,7 +128,7 @@ getData.addEventListener('click', () => {
   function showCharactersByFirstName(firstName) {
     const results = document.getElementById('results');
     results.innerHTML = `
-  <h2 class="text-center mt-20 text-2xl text-white">So which "${firstName}" is your favorite "${firstName}"?</h2>
+  <h2 class="text-center pt-32 text-2xl text-white">So which "${firstName}" is your favorite "${firstName}"?</h2>
   <div class="flex flex-wrap gap-4 justify-center mt-8" id="relatedList">Loading...</div>`;
 
     // lets fetch content related to the first name
