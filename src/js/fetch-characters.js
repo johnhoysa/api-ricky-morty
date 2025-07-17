@@ -162,6 +162,31 @@ getData.addEventListener('click', () => {
             delay: index * 0.2, // Stagger delay based on index
             ease: 'power2.out' // Easing function
           });
+
+          // Animate Hover
+          const randomAngle = randomRotation();
+          card.addEventListener('mouseenter', () => {
+            // REset so only need one animation
+            gsap.to(card, {
+              scale: 1.02,
+              backgroundColor: '#7CE158',
+              rotate: randomAngle,
+              duration: 0.3,
+              ease: 'ease.out'
+            });
+          });
+          // Animate hover out
+          card.addEventListener('mouseleave', () => {
+            // REset so only need one animation
+            gsap.to(card, {
+              scale: 1,
+              backgroundColor: '#ffffff',
+              rotate: 0,
+              y: 0,
+              duration: 0.3,
+              ease: 'ease.out'
+            });
+          });
         });
       })
       .catch(() => {
@@ -170,3 +195,10 @@ getData.addEventListener('click', () => {
       });
   }
 });
+
+function randomRotation(min = -2, max = 2) {
+  let angle = Math.random() * (max - min) + min;
+  // Avoid exactly 0 if you want some visible tilt
+  if (angle === 0) return randomRotation(min, max);
+  return angle;
+}
