@@ -8,18 +8,17 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 // get family members using API
 const getData = document.getElementById('letsStart');
 const appContainer = document.getElementById('app');
+// add html to page
+const html = `
+  <h2 class="mt-20 text-2xl text-center text-white">Which is your favorite character?</h2>
+  <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards"></div>
+  <div class="mt-8 results" id="results"></div>
+`;
 
 // Button action
 getData.addEventListener('click', () => {
   // Disable
   getData.disabled = true;
-
-  // add html to page
-  const html = `
-  <h2 class="mt-20 text-2xl text-center text-white">Which is your favorite character?</h2>
-  <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards"></div>
-  <div class="mt-8 results" id="results"></div>
-`;
 
   appContainer.innerHTML = html;
 
@@ -36,14 +35,14 @@ getData.addEventListener('click', () => {
 
         const halfIndex = Math.floor(family.length / 2);
 
-        // once data is recived scroll user to the section
+        // once data is received scroll user to the section
         gsap.to(window, {
           duration: 0.5,
           scrollTo: '#app',
           ease: 'power2.inOut'
         });
 
-        //card.className = 'card';
+        //Create card, add styles and content here
         card.classList.add('bg-white', 'rounded-md', 'p-4', 'cursor-pointer');
         card.innerHTML = `
             <img class="w-full rounded-md" src="${member.image}" alt="${member.name}">
@@ -51,55 +50,15 @@ getData.addEventListener('click', () => {
           `;
 
         // Animate cards in on load
-        gsap.from(card, {
-          duration: 1, // Animation duration
-          y: 50, // Move 50px down
-          opacity: 0, // Fade in
-          delay: index * 0.2, // Stagger delay based on index
-          ease: 'power2.out' // Easing function
-        });
+        animateCardEntrance(card, index);
 
         card.addEventListener('mouseenter', () => {
-          // Clear previous tweens on this element
-          gsap.killTweensOf(card);
-          //
-          gsap.defaults({
-            ease: 'ease.out',
-            duration: 0.3,
-            backgroundColor: '#7CE158',
-            scale: 1.02,
-            opacity: 1
-          });
-
-          if (index < halfIndex) {
-            // Animation A: slide left and rotate
-            gsap.to(card, {
-              rotation: -4
-            });
-          } else if (index > halfIndex) {
-            // Animation B: slide right and rotate opposite
-            gsap.to(card, {
-              rotation: 4
-            });
-          } else {
-            // Animation C: scale and bounce
-            gsap.to(card, {
-              y: -8
-            });
-          }
+          animateCardHover(card, index, halfIndex);
         }); // Event Listener
 
         // On mouse leave
         card.addEventListener('mouseleave', () => {
-          // REset so only need one animation
-          gsap.to(card, {
-            scale: 1,
-            backgroundColor: '#ffffff',
-            rotation: 0,
-            y: 0,
-            duration: 0.3,
-            ease: 'ease.out'
-          });
+          animateCardHoverOut(card);
         });
 
         // On card click
@@ -120,12 +79,13 @@ getData.addEventListener('click', () => {
       });
     });
 
-  // search for member and show alternate characters.
+  //
+  // search for firstName and show alternate characters.
   function showCharactersByFirstName(firstName) {
     const results = document.getElementById('results');
     results.innerHTML = `
   <h2 class="text-center pt-32 text-2xl text-white">So which "${firstName}" is your favorite "${firstName}"?</h2>
-  <div class="flex flex-wrap gap-4 justify-center mt-8" id="relatedList">Loading...</div>`;
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5  gap-4 justify-center mt-8" id="relatedList">Loading...</div>`;
 
     // lets fetch content related to the first name
     fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
@@ -135,6 +95,7 @@ getData.addEventListener('click', () => {
         list.innerHTML = '';
 
         data.results.forEach((char, index) => {
+          // Create cards and styles
           const card = document.createElement('div');
           card.classList.add(
             'bg-white',
@@ -151,37 +112,15 @@ getData.addEventListener('click', () => {
             `;
           list.appendChild(card);
           // Animate in
-          gsap.from(card, {
-            duration: 1, // Animation duration
-            y: 50, // Move 50px down
-            opacity: 0, // Fade in
-            delay: index * 0.2, // Stagger delay based on index
-            ease: 'power2.out' // Easing function
-          });
+          animateCardEntrance(card, index);
 
           // Animate Hover
-          const randomAngle = randomRotation();
           card.addEventListener('mouseenter', () => {
-            // REset so only need one animation
-            gsap.to(card, {
-              scale: 1.02,
-              backgroundColor: '#7CE158',
-              rotate: randomAngle,
-              duration: 0.3,
-              ease: 'ease.out'
-            });
+            animateRelatedCardHover(card);
           });
           // Animate hover out
           card.addEventListener('mouseleave', () => {
-            // REset so only need one animation
-            gsap.to(card, {
-              scale: 1,
-              backgroundColor: '#ffffff',
-              rotate: 0,
-              y: 0,
-              duration: 0.3,
-              ease: 'ease.out'
-            });
+            animateRelatedCardHoverOut(card);
           });
         });
       })
@@ -192,6 +131,74 @@ getData.addEventListener('click', () => {
   }
 });
 
+// Animation helpers
+function animateCardEntrance(card, index) {
+  gsap.from(card, {
+    duration: 1,
+    y: 50,
+    opacity: 0,
+    delay: index * 0.2,
+    ease: 'power2.out'
+  });
+}
+
+function animateCardHover(card, index, halfIndex) {
+  gsap.killTweensOf(card);
+  gsap.defaults({
+    ease: 'ease.out',
+    duration: 0.3,
+    backgroundColor: '#7CE158',
+    scale: 1.02,
+    opacity: 1
+  });
+  if (index < halfIndex) {
+    gsap.to(card, {
+      rotation: -4
+    });
+  } else if (index > halfIndex) {
+    gsap.to(card, {
+      rotation: 4
+    });
+  } else {
+    gsap.to(card, {
+      y: -8
+    });
+  }
+}
+
+function animateCardHoverOut(card) {
+  gsap.to(card, {
+    scale: 1,
+    backgroundColor: '#ffffff',
+    rotation: 0,
+    y: 0,
+    duration: 0.3,
+    ease: 'ease.out'
+  });
+}
+
+function animateRelatedCardHover(card) {
+  const randomAngle = randomRotation();
+  gsap.to(card, {
+    scale: 1.02,
+    backgroundColor: '#7CE158',
+    rotate: randomAngle,
+    duration: 0.3,
+    ease: 'ease.out'
+  });
+}
+
+function animateRelatedCardHoverOut(card) {
+  gsap.to(card, {
+    scale: 1,
+    backgroundColor: '#ffffff',
+    rotate: 0,
+    y: 0,
+    duration: 0.3,
+    ease: 'ease.out'
+  });
+}
+// Create a random number to help animate cards
 function randomRotation(min = -2, max = 2) {
   let angle = Math.random() * (max - min) + min;
   // Avoid exactly 0 if you want some visible tilt
