@@ -63,32 +63,28 @@ getData.addEventListener('click', () => {
           // Clear previous tweens on this element
           gsap.killTweensOf(card);
           //
+          gsap.defaults({
+            ease: 'ease.out',
+            duration: 0.3,
+            backgroundColor: '#7CE158',
+            scale: 1.02,
+            opacity: 1
+          });
+
           if (index < halfIndex) {
             // Animation A: slide left and rotate
             gsap.to(card, {
-              scale: 1.02,
-              backgroundColor: '#7CE158',
-              rotation: -4,
-              duration: 0.3,
-              ease: 'ease.out'
+              rotation: -4
             });
           } else if (index > halfIndex) {
             // Animation B: slide right and rotate opposite
             gsap.to(card, {
-              scale: 1.02,
-              backgroundColor: '#7CE158',
-              rotation: 4,
-              duration: 0.3,
-              ease: 'ease.out'
+              rotation: 4
             });
           } else {
             // Animation C: scale and bounce
             gsap.to(card, {
-              scale: 1.02,
-              backgroundColor: '#7CE158',
-              y: -8,
-              duration: 0.3,
-              ease: 'ease.out'
+              y: -8
             });
           }
         }); // Event Listener
