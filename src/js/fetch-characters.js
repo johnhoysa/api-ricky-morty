@@ -16,7 +16,7 @@ getData.addEventListener('click', () => {
 
   // add html to page
   const html = `
-  <h2 class="mt-8 text-xl text-center text-white">Which is your favorite character?</h2>
+  <h2 class="mt-20 text-2xl text-center text-white">Which is your favorite character?</h2>
   <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards"></div>
   <div class="mt-8 results" id="results"></div>
 `;
@@ -38,7 +38,7 @@ getData.addEventListener('click', () => {
         gsap.to(window, {
           duration: 0.5,
           scrollTo: '#app',
-          offsetY: 152,
+          offsetY: 150,
           ease: 'power2.inOut'
         });
 
@@ -66,9 +66,9 @@ getData.addEventListener('click', () => {
           gsap.to(window, {
             duration: 0.5,
             scrollTo: '#results',
-            offsetY: 152,
-            delay: 1,
-            ease: 'power2.inOut'
+            offsetY: 196,
+            delay: 0.5,
+            ease: 'ease.inOut'
           });
         });
 
@@ -80,8 +80,8 @@ getData.addEventListener('click', () => {
   function showCharactersByFirstName(firstName) {
     const results = document.getElementById('results');
     results.innerHTML = `
-  <h2 class="text-center mt-4 text-xl text-white">So which "${firstName}" is your favorite "${firstName}"?</h2>
-  <div class="flex flex-wrap gap-4 justify-center" id="relatedList">Loading...</div>`;
+  <h2 class="text-center mt-20 text-2xl text-white">So which "${firstName}" is your favorite "${firstName}"?</h2>
+  <div class="flex flex-wrap gap-4 justify-center mt-8" id="relatedList">Loading...</div>`;
 
     // lets fetch content related to the first name
     fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
