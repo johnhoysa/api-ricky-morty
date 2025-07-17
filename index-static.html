@@ -1,0 +1,64 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Rick and Morty API </title>
+  <link href="./dist/css/styles.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body class="static p-0 text-base font-primary bg-dirt">
+
+  <div class="mx-auto max-w-xl p-8">
+    <h1 class=" flex flex-col md:flex-row items-center justify-center mt-8 text-3xl font-bold text-white">
+      <span>Welcome to the</span>
+      <img src="./assets/images/rick-and-morty-logo.png" width="" height="" alt="Ricky &amp; Morty">
+      <span>Character Selector!</span>
+    </h1>
+    <div class="mx-auto mt-8 w-3/4 lg:w-2/5 ">
+      <ul class="text-white list-disc">
+        <li>Choose your favorite character from the list below.</li>
+        <li>Based on your choice, we’ll show you variations or related versions.</li>
+        <li>Pick your favorite again!</li>
+      </ul>
+      <button id="letsStart"
+        class="mt-8 px-4 py-2 border-2 border-[#7CE158] text-white rounded transition-colors duration-300 hover:bg-[#7CE158] hover:text-white  bg-[#22A2BD]"
+        disabled="">Ready
+        to get
+        Started?</button>
+    </div>
+  </div>
+
+  <div id="app" class="mx-auto max-w-xl p-8">
+    <h2 class="mt-20 text-2xl text-center text-white">Which is your favorite character?</h2>
+    <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards">
+      <div class="bg-white rounded-md p-4 cursor-pointer">
+        <img class="w-full rounded-md" src="./assets/images/1.jpg" alt="Rick Sanchez">
+        <h3 class="mt-2 text-center text-base">Rick Sanchez</h3>
+      </div>
+      <div class="bg-white rounded-md p-4 cursor-pointer">
+        <img class="w-full rounded-md" src="./assets/images/2.png" alt="Morty Smith">
+        <h3 class="mt-2 text-center text-base">Morty Smith</h3>
+      </div>
+      <div class="bg-white rounded-md p-4 cursor-pointer">
+        <img class="w-full rounded-md" src="./assets/images/3.jpg" alt="Summer Smith">
+        <h3 class="mt-2 text-center text-base">Summer Smith</h3>
+      </div>
+      <div class="bg-white rounded-md p-4 cursor-pointer">
+        <img class="w-full rounded-md" src="./assets/images/4.jpg" alt="Beth Smith">
+        <h3 class="mt-2 text-center text-base">Beth Smith</h3>
+      </div>
+      <div class="bg-white rounded-md p-4 cursor-pointer">
+        <img class="w-full rounded-md" src="./assets/images/5.png" alt="Jerry Smith">
+        <h3 class="mt-2 text-center text-base">Jerry Smith</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="./dist/js/index.js"></script>
+
+
+</body>
+
+</html>
