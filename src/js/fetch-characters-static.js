@@ -78,13 +78,15 @@ cards.forEach((card, index) => {
     const firstName = member.name.split(' ')[0];
     // pass member name to step 2.
     showCharactersByFirstName(firstName);
+    //
+    //
     // SCroll to next section
-    gsap.to(window, {
-      duration: 0.5,
-      scrollTo: '#results',
-      delay: 0.5,
-      y: 0,
-      ease: 'ease.inOut'
-    });
+    // gsap.to(window, {
+    //   duration: 0.5,
+    //   scrollTo: '#results',
+    //   delay: 0.5,
+    //   y: 0,
+    //   ease: 'ease.inOut'
+    // });
   });
 });
