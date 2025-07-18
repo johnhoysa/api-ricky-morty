@@ -11,10 +11,16 @@ const appContainer = document.getElementById('app');
 
 const container = document.getElementById('familyCards');
 const cards = container.querySelectorAll('div');
+
+const halfIndex = Math.floor(cards.length / 2);
+
 // Create card for each member
 cards.forEach((card, index) => {
+  let cardInner = card.querySelector('.card__inner');
+
+  console.log('cardInner', cardInner);
   // Animate cards in on load
-  gsap.from(card, {
+  gsap.from(cardInner, {
     duration: 1, // Animation duration
     y: 50, // Move 50px down
     opacity: 0, // Fade in
@@ -22,71 +28,66 @@ cards.forEach((card, index) => {
     ease: 'power2.out' // Easing function
   });
 
-  const halfIndex = Math.floor(cards.length / 2);
+  let isClicked = false;
+  let hoverTween = null; // Tracks hover animation
+  let clickTween = null; // Tracks click animation
 
-  // On Card Hover
+  // Mouse Enter
   card.addEventListener('mouseenter', () => {
-    // Clear previous tweens on this element
-    gsap.killTweensOf(card);
-    //
-    if (index < halfIndex) {
-      // Animation A: slide left and rotate
-      gsap.to(card, {
-        scale: 1.02,
-        backgroundColor: '#7CE158',
-        rotation: -4,
-        duration: 0.3,
-        ease: 'ease.out'
-      });
-    } else if (index > halfIndex) {
-      // Animation B: slide right and rotate opposite
-      gsap.to(card, {
-        scale: 1.02,
-        backgroundColor: '#7CE158',
-        rotation: 4,
-        duration: 0.3,
-        ease: 'ease.out'
-      });
-    } else {
-      // Animation C: scale and bounce
-      gsap.to(card, {
-        scale: 1.02,
-        backgroundColor: '#7CE158',
-        y: -8,
-        duration: 0.3,
-        ease: 'ease.out'
-      });
-    }
-  }); // Event Listener
+    if (isClicked) return; // Skip if already clicked
+    // Kill any existing hover animation
+    if (hoverTween) hoverTween.kill();
 
-  // On mouse leave
-  card.addEventListener('mouseleave', () => {
-    // REset so only need one animation
-    gsap.to(card, {
+    hoverTween = gsap.to(cardInner, {
       scale: 1,
-      backgroundColor: '#ffffff',
-      rotation: 0,
-      y: 0,
+      backgroundColor: '#3b82f6', // hover to make blue-600
       duration: 0.3,
-      ease: 'ease.out'
+      ease: 'power1.out'
     });
   });
 
-  //
-  // On card click
-  card.addEventListener('click', () => {
-    const firstName = member.name.split(' ')[0];
-    // pass member name to step 2.
-    showCharactersByFirstName(firstName);
-    //
-    //
-    // SCroll to next section
-    // gsap.to(window, {
-    //   duration: 0.5,
-    //   scrollTo: '#results',
-    //   delay: 0.5,
-    //   y: 0,
-    //   ease: 'ease.inOut'
-    // });
+  // Mouse Leave
+  card.addEventListener('mouseleave', () => {
+    if (isClicked) return; // Skip if clicked
+    if (hoverTween) hoverTween.kill();
+
+    hoverTween = gsap.to(cardInner, {
+      scale: 1,
+      backgroundColor: '#fff', // Reset color to white
+      duration: 0.3,
+      ease: 'power1.in'
+    });
   });
+
+  // Click
+  card.addEventListener('click', () => {
+    isClicked = !isClicked; // Toggle clicked state
+
+    // Kill hover animation so they don’t conflict
+    if (hoverTween) hoverTween.kill();
+
+    if (clickTween) clickTween.kill();
+
+    if (isClicked) {
+      // Play click animation
+      clickTween = gsap.to(cardInner, {
+        rotationY: 180,
+        scale: 1,
+        //backgroundColor: '#ef4444', // Tailwind red-500
+        duration: 0.8,
+        ease: 'power2.inOut'
+      });
+    } else {
+      // Reset to Hover on second click
+      clickTween = gsap.to(cardInner, {
+        rotationY: 0,
+        scale: 1,
+        // backgroundColor: '#3b82f6', // Reset color
+        duration: 0.8,
+        ease: 'power2.inOut'
+      });
+      isClicked = isClicked;
+    }
+  });
+  //
 });
