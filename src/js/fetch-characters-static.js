@@ -10,7 +10,7 @@ const getData = document.getElementById('letsStart');
 const appContainer = document.getElementById('app');
 
 const container = document.getElementById('familyCards');
-const cards = container.querySelectorAll('div');
+const cards = container.querySelectorAll('.card');
 
 const halfIndex = Math.floor(cards.length / 2);
 
@@ -18,9 +18,8 @@ const halfIndex = Math.floor(cards.length / 2);
 cards.forEach((card, index) => {
   let cardInner = card.querySelector('.card__inner');
 
-  console.log('cardInner', cardInner);
   // Animate cards in on load
-  gsap.from(cardInner, {
+  gsap.from(card, {
     duration: 1, // Animation duration
     y: 50, // Move 50px down
     opacity: 0, // Fade in
