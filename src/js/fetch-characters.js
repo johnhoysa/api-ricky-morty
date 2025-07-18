@@ -137,6 +137,7 @@ function animateCardEntrance(card, index) {
     duration: 1,
     y: 50,
     opacity: 0,
+    rotate: randomAngle,
     delay: index * 0.2,
     ease: 'power2.out'
   });
