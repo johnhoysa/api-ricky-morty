@@ -1,0 +1,110 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Rick and Morty API </title>
+  <link href="./dist/css/styles.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body class="static p-0 text-base font-primary bg-dirt">
+  <!-- Static HTML so I am not pulling data from the API as often -->
+  <!-- Scratch pad like area for testing code -->
+  <div class="mx-auto max-w-xl p-8">
+    <h1 class=" flex flex-col md:flex-row items-center justify-center mt-8 text-3xl font-bold text-white">
+      <span>Welcome to the</span>
+      <img src="./assets/images/rick-and-morty-logo.png" width="" height="" alt="Ricky &amp; Morty">
+      <span>Character Selector!</span>
+    </h1>
+    <div class="mx-auto mt-8 w-3/4 lg:w-2/5 ">
+      <ul class="text-white list-disc">
+        <li>Choose your favorite character from the list below.</li>
+        <li>Based on your choice, we’ll show you variations or related versions.</li>
+        <li>Pick your favorite again!</li>
+      </ul>
+      <button id="letsStart"
+        class="mt-8 px-4 py-2 border-2 border-[#7CE158] text-white rounded transition-colors duration-300 hover:bg-[#7CE158] hover:text-white  bg-[#22A2BD]"
+        disabled="">Ready
+        to get
+        Started?</button>
+    </div>
+  </div>
+
+  <div id="app" class="mx-auto max-w-xl p-8">
+    <h2 class="mt-20 text-2xl text-center text-white">Which is your favorite character?</h2>
+    <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards">
+
+      <div class="card relative w-52 h-80 perspective cursor-pointer">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <!-- Front -->
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl  backface-hidden">
+            <img class="w-full  rounded-md" src="./assets/images/2.png" alt="Morty Smith">
+            <h3 class="mt-2 text-center text-base">Morty Smith</h3>
+          </div>
+          <!-- Back -->
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-2xl  rotate-y-180 backface-hidden">
+            Back of card testing, no content yet
+          </div>
+        </div>
+      </div>
+
+      <div class="card relative w-52 h-80 perspective cursor-pointer">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <!-- Front -->
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl  backface-hidden">
+            <img class="w-full  rounded-md" src="./assets/images/2.png" alt="Morty Smith">
+            <h3 class="mt-2 text-center text-base">Morty Smith</h3>
+          </div>
+          <!-- Back -->
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-2xl  rotate-y-180 backface-hidden">
+            Back of card testing, no content yet
+          </div>
+        </div>
+      </div>
+
+      <div class="card relative w-52 h-80 perspective cursor-pointer">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <!-- Front -->
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl  backface-hidden">
+            <img class="w-full  rounded-md" src="./assets/images/2.png" alt="Morty Smith">
+            <h3 class="mt-2 text-center text-base">Morty Smith</h3>
+          </div>
+          <!-- Back -->
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-2xl  rotate-y-180 backface-hidden">
+            Back of card testing, no content yet
+          </div>
+        </div>
+      </div>
+
+      <div class="card relative w-52 h-80 perspective cursor-pointer">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <!-- Front -->
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="./assets/images/2.png" alt="Morty Smith">
+            <h3 class="mt-2 text-center text-base">Morty Smith</h3>
+          </div>
+          <!-- Back -->
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-2xl bg-red-500 rounded-lg rotate-y-180 backface-hidden">
+            Back of card testing, no content yet
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- end Grid -->
+
+  </div>
+
+  <script src="./dist/js/index.js"></script>
+
+
+</body>
+
+</html>

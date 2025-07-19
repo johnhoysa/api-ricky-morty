@@ -6,20 +6,19 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // get family members using API
-const getData = document.getElementById('letsStart');
+const getData = document.getElementById('letsStart'); // Rename this variable and element
 const appContainer = document.getElementById('app');
+// add intial html to page
+const html = `
+  <h2 class="mt-20 text-2xl text-center text-white">Who’s your favorite? Don’t say Rick. Or do. Whatever. It’s fine.</h2>
+  <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards"></div>
+  <div class="mt-8 results" id="results"></div>
+`;
 
 // Button action
 getData.addEventListener('click', () => {
   // Disable
   getData.disabled = true;
-
-  // add html to page
-  const html = `
-  <h2 class="mt-20 text-2xl text-center text-white">Which is your favorite character?</h2>
-  <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards"></div>
-  <div class="mt-8 results" id="results"></div>
-`;
 
   appContainer.innerHTML = html;
 
@@ -34,15 +33,16 @@ getData.addEventListener('click', () => {
       family.forEach((member, index) => {
         const card = document.createElement('div');
 
-        // once data is recived scroll user to the section
+        const halfIndex = Math.floor(family.length / 2);
+
+        // once data is received scroll user to the section
         gsap.to(window, {
           duration: 0.5,
           scrollTo: '#app',
-          offsetY: 150,
           ease: 'power2.inOut'
         });
 
-        //card.className = 'card';
+        //Create card, add styles and content here
         card.classList.add('bg-white', 'rounded-md', 'p-4', 'cursor-pointer');
         card.innerHTML = `
             <img class="w-full rounded-md" src="${member.image}" alt="${member.name}">
@@ -50,13 +50,17 @@ getData.addEventListener('click', () => {
           `;
 
         // Animate cards in on load
-        gsap.from(card, {
-          duration: 1, // Animation duration
-          y: 50, // Move 50px down
-          opacity: 0, // Fade in
-          delay: index * 0.2, // Stagger delay based on index
-          ease: 'power2.out' // Easing function
+        animateCardEntrance(card, index);
+
+        card.addEventListener('mouseenter', () => {
+          animateCardHover(card, index, halfIndex);
+        }); // Event Listener
+
+        // On mouse leave
+        card.addEventListener('mouseleave', () => {
+          animateCardHoverOut(card);
         });
+
         // On card click
         card.addEventListener('click', () => {
           const firstName = member.name.split(' ')[0];
@@ -66,7 +70,6 @@ getData.addEventListener('click', () => {
           gsap.to(window, {
             duration: 0.5,
             scrollTo: '#results',
-            offsetY: 196,
             delay: 0.5,
             ease: 'ease.inOut'
           });
@@ -76,12 +79,14 @@ getData.addEventListener('click', () => {
       });
     });
 
-  // search for member and show alternate characters.
+  //
+  // search for firstName and show alternate characters.
   function showCharactersByFirstName(firstName) {
     const results = document.getElementById('results');
     results.innerHTML = `
-  <h2 class="text-center mt-20 text-2xl text-white">So which "${firstName}" is your favorite "${firstName}"?</h2>
-  <div class="flex flex-wrap gap-4 justify-center mt-8" id="relatedList">Loading...</div>`;
+  <h2 class="text-center pt-32 text-2xl text-white">
+  Okay, so—get this—multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
+  <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList">Loading...</div>`;
 
     // lets fetch content related to the first name
     fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
@@ -91,34 +96,181 @@ getData.addEventListener('click', () => {
         list.innerHTML = '';
 
         data.results.forEach((char, index) => {
+          // Create cards and styles
           const card = document.createElement('div');
           card.classList.add(
-            'bg-white',
-            'rounded-md',
-            'p-4',
-            'mt-4',
-            'text-center',
-            'cursor-pointer'
+            'card',
+            'relative',
+            'w-52',
+            'h-80',
+            'perspective',
+            'cursor-pointer',
+            'rounded-lg'
           );
           card.innerHTML = `
-              <img class="w-full rounded-md" src="${char.image}" alt="${char.name}">
-              <h4 class="text-base">${char.name}</h4>
-              <p class="text-sm">${char.species}</p>
+              <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+              <div
+                class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+                <img class="w-full  rounded-md" src="${char.image}" alt="${char.name}">
+                <h3 class="mt-2 text-center text-base">${char.name}</h3>
+                <p class="text-sm">${char.species}</p>
+              </div>
+
+              <div
+                class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden">
+                <p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that’s cool.</p>
+              </div>
+            </div>
             `;
           list.appendChild(card);
           // Animate in
-          gsap.from(card, {
-            duration: 1, // Animation duration
-            y: 50, // Move 50px down
-            opacity: 0, // Fade in
-            delay: index * 0.2, // Stagger delay based on index
-            ease: 'power2.out' // Easing function
+          animateCardEntrance(card, index);
+
+          let isClicked = false;
+          let hoverTween = null; // Tracks hover animation
+          let clickTween = null; // Tracks click animation
+
+          let cardInner = card.querySelector('.card__inner');
+
+          card.addEventListener('mouseenter', () => {
+            hoverTween = animateRelatedCardHover(
+              cardInner,
+              isClicked,
+              hoverTween
+            );
+          });
+
+          card.addEventListener('mouseleave', () => {
+            hoverTween = animateRelatedCardHoverOut(
+              cardInner,
+              isClicked,
+              hoverTween
+            );
+          });
+
+          card.addEventListener('click', () => {
+            const result = animateRelatedCardClick(
+              cardInner,
+              isClicked,
+              hoverTween,
+              clickTween
+            );
+            isClicked = result.isClicked;
+            clickTween = result.clickTween;
           });
         });
       })
       .catch(() => {
         document.getElementById('relatedList').textContent =
-          'No characters found.';
+          'No characters? Great. Just great. I probably messed something up, didn’t I?';
       });
   }
 });
+
+// Animation helpers
+function animateCardEntrance(card, index) {
+  const randomAngle = randomRotation();
+  gsap.from(card, {
+    duration: 1,
+    y: 50,
+    opacity: 0,
+    rotate: randomAngle,
+    delay: index * 0.2,
+    ease: 'power2.out'
+  });
+}
+
+function animateCardHover(card, index, halfIndex) {
+  gsap.killTweensOf(card);
+  gsap.defaults({
+    ease: 'ease.out',
+    duration: 0.3,
+    backgroundColor: '#7CE158', // Green
+    scale: 1.02,
+    opacity: 1
+  });
+  if (index < halfIndex) {
+    gsap.to(card, {
+      rotation: -4
+    });
+  } else if (index > halfIndex) {
+    gsap.to(card, {
+      rotation: 4
+    });
+  } else {
+    gsap.to(card, {
+      y: -8
+    });
+  }
+}
+
+function animateCardHoverOut(card) {
+  gsap.to(card, {
+    scale: 1,
+    backgroundColor: '#ffffff',
+    rotation: 0,
+    y: 0,
+    duration: 0.3,
+    ease: 'ease.out'
+  });
+}
+
+// Related card animation helpers
+// Mouse OVER card
+function animateRelatedCardHover(cardInner, isClicked, hoverTween) {
+  const randomAngle = randomRotation();
+  if (isClicked) return hoverTween;
+  if (hoverTween) hoverTween.kill();
+  return gsap.to(cardInner, {
+    scale: 1,
+    duration: 0.3,
+    rotate: randomAngle,
+    ease: 'power1.out'
+  });
+}
+// Mouse OUT card
+function animateRelatedCardHoverOut(cardInner, isClicked, hoverTween) {
+  const randomAngle = randomRotation();
+  if (isClicked) return hoverTween;
+  if (hoverTween) hoverTween.kill();
+  return gsap.to(cardInner, {
+    scale: 1,
+    backgroundColor: '#ffffff', // white
+    duration: 0.3,
+    rotate: 0,
+    rotate: 0,
+    ease: 'power1.in'
+  });
+}
+
+// Click and rotate the card
+function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
+  let newIsClicked = !isClicked;
+  if (hoverTween) hoverTween.kill();
+  if (clickTween) clickTween.kill();
+  let newClickTween;
+  if (newIsClicked) {
+    newClickTween = gsap.to(cardInner, {
+      rotationY: 180,
+      scale: 1,
+      duration: 0.8,
+      ease: 'power2.inOut'
+    });
+  } else {
+    newClickTween = gsap.to(cardInner, {
+      rotationY: 0,
+      scale: 1,
+      duration: 0.8,
+      ease: 'power2.inOut'
+    });
+  }
+  return { isClicked: newIsClicked, clickTween: newClickTween };
+}
+
+// Create a random number to help animate cards
+function randomRotation(min = -2, max = 2) {
+  let angle = Math.random() * (max - min) + min;
+  // Avoid exactly 0 if you want some visible tilt
+  if (angle === 0) return randomRotation(min, max);
+  return angle;
+}
