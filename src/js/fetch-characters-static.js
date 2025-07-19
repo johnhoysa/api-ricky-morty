@@ -1,3 +1,5 @@
+// Scratch page so I am not pulling data from the API as much.
+//
 // GSAP Imports
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';

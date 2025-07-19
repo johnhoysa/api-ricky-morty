@@ -86,13 +86,12 @@ getData.addEventListener('click', () => {
     results.innerHTML = `
   <h2 class="text-center pt-32 text-2xl text-white">
   Okay, so—get this—multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
-  <div class="flex flex-wrap gap-4 justify-center mt-8" id="relatedList">Loading...</div>`;
+  <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList">Loading...</div>`;
 
     // lets fetch content related to the first name
     fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log('data for related', data);
         const list = document.getElementById('relatedList');
         list.innerHTML = '';
 
