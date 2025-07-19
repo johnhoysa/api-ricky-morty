@@ -91,6 +91,7 @@ getData.addEventListener('click', () => {
     fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log('data for related', data);
         const list = document.getElementById('relatedList');
         list.innerHTML = '';
 
@@ -98,29 +99,105 @@ getData.addEventListener('click', () => {
           // Create cards and styles
           const card = document.createElement('div');
           card.classList.add(
-            'bg-white',
-            'rounded-md',
-            'p-4',
-            'mt-4',
-            'text-center',
-            'cursor-pointer'
+            'card',
+            'relative',
+            'w-52',
+            'h-80',
+            'perspective',
+            'cursor-pointer',
+            'rounded-lg'
           );
           card.innerHTML = `
-              <img class="w-full rounded-md" src="${char.image}" alt="${char.name}">
-              <h4 class="text-base">${char.name}</h4>
-              <p class="text-sm">${char.species}</p>
+              <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+              <div
+                class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+                <img class="w-full  rounded-md" src="${char.image}" alt="${char.name}">
+                <h3 class="mt-2 text-center text-base">${char.name}</h3>
+                <p class="text-sm">${char.species}</p>
+              </div>
+
+              <div
+                class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden">
+                <p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, ${char.status}, and hanging out at ${char.location.name}. I… I guess that’s cool.</p>
+              </div>
+            </div>
             `;
           list.appendChild(card);
           // Animate in
           animateCardEntrance(card, index);
 
           // Animate Hover
-          card.addEventListener('mouseenter', () => {
-            animateRelatedCardHover(card);
-          });
+          // card.addEventListener('mouseenter', () => {
+          //   animateRelatedCardHover(card);
+          // });
           // Animate hover out
+          // card.addEventListener('mouseleave', () => {
+          //   animateRelatedCardHoverOut(card);
+          // });
+
+          let isClicked = false;
+          let hoverTween = null; // Tracks hover animation
+          let clickTween = null; // Tracks click animation
+
+          let cardInner = card.querySelector('.card__inner');
+          // Mouse Enter
+          card.addEventListener('mouseenter', () => {
+            if (isClicked) return; // Skip if already clicked
+            // Kill any existing hover animation
+            if (hoverTween) hoverTween.kill();
+
+            hoverTween = gsap.to(cardInner, {
+              scale: 1,
+              backgroundColor: '#3b82f6', // hover to make blue-600
+              duration: 0.3,
+
+              ease: 'power1.out'
+            });
+          });
+
+          // Mouse Leave
           card.addEventListener('mouseleave', () => {
-            animateRelatedCardHoverOut(card);
+            if (isClicked) return; // Skip if clicked
+            if (hoverTween) hoverTween.kill();
+
+            hoverTween = gsap.to(cardInner, {
+              scale: 1,
+              backgroundColor: '#fff', // Reset color to white
+              duration: 0.3,
+              rotate: 0,
+              ease: 'power1.in'
+            });
+          });
+
+          // Click
+          card.addEventListener('click', () => {
+            isClicked = !isClicked; // Toggle clicked state
+
+            // Kill hover animation so they don’t conflict
+            if (hoverTween) hoverTween.kill();
+
+            if (clickTween) clickTween.kill();
+
+            if (isClicked) {
+              // Play click animation
+              clickTween = gsap.to(cardInner, {
+                rotationY: 180,
+                scale: 1,
+                //backgroundColor: '#ef4444', // Tailwind red-500
+                duration: 0.8,
+                ease: 'power2.inOut'
+              });
+            } else {
+              // Reset to Hover on second click
+              clickTween = gsap.to(cardInner, {
+                rotationY: 0,
+                scale: 1,
+                // backgroundColor: '#3b82f6', // Reset color
+                duration: 0.8,
+                ease: 'power2.inOut'
+              });
+              isClicked = isClicked;
+            }
           });
         });
       })
@@ -133,6 +210,7 @@ getData.addEventListener('click', () => {
 
 // Animation helpers
 function animateCardEntrance(card, index) {
+  const randomAngle = randomRotation();
   gsap.from(card, {
     duration: 1,
     y: 50,
@@ -178,27 +256,27 @@ function animateCardHoverOut(card) {
   });
 }
 
-function animateRelatedCardHover(card) {
-  const randomAngle = randomRotation();
-  gsap.to(card, {
-    scale: 1.02,
-    backgroundColor: '#7CE158',
-    rotate: randomAngle,
-    duration: 0.3,
-    ease: 'ease.out'
-  });
-}
+// function animateRelatedCardHover(card) {
+//   const randomAngle = randomRotation();
+//   gsap.to(card, {
+//     scale: 1.02,
+//     backgroundColor: '#7CE158',
+//     rotate: randomAngle,
+//     duration: 0.3,
+//     ease: 'ease.out'
+//   });
+// }
 
-function animateRelatedCardHoverOut(card) {
-  gsap.to(card, {
-    scale: 1,
-    backgroundColor: '#ffffff',
-    rotate: 0,
-    y: 0,
-    duration: 0.3,
-    ease: 'ease.out'
-  });
-}
+// function animateRelatedCardHoverOut(card) {
+//   gsap.to(card, {
+//     scale: 1,
+//     backgroundColor: '#ffffff',
+//     rotate: 0,
+//     y: 0,
+//     duration: 0.3,
+//     ease: 'ease.out'
+//   });
+// }
 // Create a random number to help animate cards
 function randomRotation(min = -2, max = 2) {
   let angle = Math.random() * (max - min) + min;
