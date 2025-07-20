@@ -11,7 +11,7 @@ const appContainer = document.getElementById('appRickMorty');
 // add intial html to page
 const html = `
   <h2 class="mt-20 text-2xl text-center text-white">Who’s your favorite? Don’t say Rick. Or do. Whatever. It’s fine.</h2>
-  <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards"></div>
+  <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards" aria-live="polite"></div>
   <div class="mt-8 results" id="results"></div>
 `;
 
@@ -91,12 +91,12 @@ getData.addEventListener('click', () => {
       results.innerHTML = `
   <h2 class="text-center pt-32 text-2xl text-white">
   Okay, so—get this—multiverse stuff. Which version of me, I mean ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
-  <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList">Loading...</div>`;
+  <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
     } else {
       results.innerHTML = `
   <h2 class="text-center pt-32 text-2xl text-white">
   Okay, so—get this—multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
-  <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList">Loading...</div>`;
+  <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
     }
 
     // lets fetch content related to the first name
