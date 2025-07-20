@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // get family members using API
 const getData = document.getElementById('letsStart'); // Rename this variable and element
-const appContainer = document.getElementById('app');
+const appContainer = document.getElementById('appRickMorty');
 // add intial html to page
 const html = `
   <h2 class="mt-20 text-2xl text-center text-white">Who’s your favorite? Don’t say Rick. Or do. Whatever. It’s fine.</h2>
@@ -38,7 +38,7 @@ getData.addEventListener('click', () => {
         // once data is received scroll user to the section
         gsap.to(window, {
           duration: 0.5,
-          scrollTo: '#app',
+          scrollTo: appContainer,
           ease: 'power2.inOut'
         });
 
@@ -46,7 +46,7 @@ getData.addEventListener('click', () => {
         card.classList.add('bg-white', 'rounded-md', 'p-4', 'cursor-pointer');
         card.innerHTML = `
             <img class="w-full rounded-md" src="${member.image}" alt="${member.name}">
-            <h3 class="mt-2 text-center text-base">${member.name}</h3>
+            <h3 class="mt-2 text-center text-base text-dirt">${member.name}</h3>
           `;
 
         // Animate cards in on load
@@ -83,10 +83,17 @@ getData.addEventListener('click', () => {
   // search for firstName and show alternate characters.
   function showCharactersByFirstName(firstName) {
     const results = document.getElementById('results');
-    results.innerHTML = `
+    if (firstName == 'Jerry') {
+      results.innerHTML = `
+  <h2 class="text-center pt-32 text-2xl text-white">
+  Okay, so—get this—multiverse stuff. Which version of me, I mean ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
+  <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList">Loading...</div>`;
+    } else {
+      results.innerHTML = `
   <h2 class="text-center pt-32 text-2xl text-white">
   Okay, so—get this—multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
   <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList">Loading...</div>`;
+    }
 
     // lets fetch content related to the first name
     fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
@@ -187,7 +194,8 @@ function animateCardHover(card, index, halfIndex) {
     duration: 0.3,
     backgroundColor: '#7CE158', // Green
     scale: 1.02,
-    opacity: 1
+    opacity: 1,
+    autoAlpha: 1
   });
   if (index < halfIndex) {
     gsap.to(card, {
@@ -250,17 +258,21 @@ function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
   if (clickTween) clickTween.kill();
   let newClickTween;
   if (newIsClicked) {
+    // Show back of card
     newClickTween = gsap.to(cardInner, {
       rotationY: 180,
       scale: 1,
       duration: 0.8,
+      delay: 0,
       ease: 'power2.inOut'
     });
   } else {
+    // Show the front card
     newClickTween = gsap.to(cardInner, {
       rotationY: 0,
       scale: 1,
       duration: 0.8,
+      delay: 0,
       ease: 'power2.inOut'
     });
   }
