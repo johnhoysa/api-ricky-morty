@@ -12,24 +12,26 @@
 
   <div class="mx-auto max-w-xl p-8">
     <h1 class=" flex flex-col md:flex-row items-center justify-center mt-8 text-3xl font-bold text-white">
+      <span class="sr-only" aria-hidden="true">Welcome to the Rick & Morty Character Selector!</span>
       <span>Welcome to the</span>
       <img src="./assets/images/rick-and-morty-logo.png" width="" height="" alt="Ricky & Morty">
       <span>Character Selector!</span>
     </h1>
-    <div class="mx-auto mt-8 w-3/4 lg:w-2/5 ">
-      <ul class="text-white list-disc">
+    <section class="mx-auto mt-8 w-3/4 lg:w-2/5 " aria-labelledby="instructions-heading">
+      <h2 class="sr-only">How to use the character selector</h2>
+      <ol class="text-white list-disc list-inside">
         <li>Choose your favorite character from the list below.</li>
         <li>Based on your choice, we’ll show you variations or related versions.</li>
         <li>Pick your favorite again!</li>
-      </ul>
+      </ol>
       <button id="letsStart"
-        class="mt-8 px-4 py-2 border-2 border-[#7CE158] text-white rounded transition-colors duration-300 hover:bg-[#7CE158] hover:text-white  bg-[#22A2BD]">Ready
-        to get
-        Started?</button>
-    </div>
+        class="mt-8 px-4 py-2 border-2 border-[#7CE158] text-white rounded transition-colors duration-300 hover:bg-[#7CE158] hover:text-white  bg-[#22A2BD]"
+        aria-describedby="instructions-heading">
+        Ready to get started?</button>
+    </section>
   </div>
 
-  <div id="appRickMorty" class="mx-auto max-w-xl p-8"></div>
+  <section id="appRickMorty" class="mx-auto max-w-xl p-8"></section>
 
   <script src="./dist/js/index.js"></script>
 </body>
