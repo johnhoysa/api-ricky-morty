@@ -83,18 +83,21 @@ getData.addEventListener('click', () => {
     });
 
   //
+  //
   // search for firstName and show alternate characters.
+  //
+  //
   function showCharactersByFirstName(firstName) {
     const results = document.getElementById('results');
     // Show header to section 2
     if (firstName == 'Jerry') {
       results.innerHTML = `
-  <h2 class="text-center pt-32 text-2xl text-white">
+  <h2 class="text-center pt-32 text-2xl text-white w-full lg:w-3/5 mx-auto">
   Okay, so—get this—multiverse stuff. Which version of me, I mean ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
   <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
     } else {
       results.innerHTML = `
-  <h2 class="text-center pt-32 text-2xl text-white">
+  <h2 class="text-center pt-32 text-2xl text-white w-full lg:w-3/5 mx-auto">
   Okay, so—get this—multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
   <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
     }
@@ -109,6 +112,18 @@ getData.addEventListener('click', () => {
         data.results.forEach((char, index) => {
           // Create cards and styles
           const card = document.createElement('div');
+
+          let cardBack = `<p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that’s cool.</p>`;
+
+          // If Beth
+          if (char.id == 4) {
+            cardBack = `<p>Beth’s your favorite? Yeah, same! I mean, if I didn’t say that, I’d probably be sleeping on the couch.</p>`;
+          }
+
+          // if Jerry
+          if (char.id == 5) {
+            cardBack = `<p>I’m your favorite? Oh jeez… Beth! Beth, did you hear that? Somebody actually likes me!</p>`;
+          }
           card.classList.add(
             'card',
             'relative',
@@ -128,8 +143,8 @@ getData.addEventListener('click', () => {
               </div>
 
               <div
-                class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden">
-                <p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that’s cool.</p>
+                class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+               ${cardBack}
               </div>
             </div>
             `;
@@ -289,6 +304,7 @@ function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
       delay: 0,
       ease: 'power2.inOut'
     });
+    // mobile since there is no mouse leave
     gsap.to(
       cardInner,
       {
