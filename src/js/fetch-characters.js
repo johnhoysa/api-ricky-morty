@@ -7,11 +7,11 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // get family members using API
 const getData = document.getElementById('letsStart'); // Rename this variable and element
-const appContainer = document.getElementById('app');
+const appContainer = document.getElementById('appRickMorty');
 // add intial html to page
 const html = `
   <h2 class="mt-20 text-2xl text-center text-white">Who’s your favorite? Don’t say Rick. Or do. Whatever. It’s fine.</h2>
-  <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards"></div>
+  <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards" aria-live="polite"></div>
   <div class="mt-8 results" id="results"></div>
 `;
 
@@ -22,6 +22,7 @@ getData.addEventListener('click', () => {
 
   appContainer.innerHTML = html;
 
+  // 1-5 are the family members
   const familyIds = [1, 2, 3, 4, 5];
   const apiURL = `https://rickandmortyapi.com/api/character/${familyIds.join(',')}`;
 
@@ -31,30 +32,32 @@ getData.addEventListener('click', () => {
       const container = document.getElementById('familyCards');
       // Create card for each member
       family.forEach((member, index) => {
+        // Create each card
         const card = document.createElement('div');
-
+        // create variable to determine which animation to use
         const halfIndex = Math.floor(family.length / 2);
 
         // once data is received scroll user to the section
         gsap.to(window, {
           duration: 0.5,
-          scrollTo: '#app',
+          scrollTo: appContainer,
           ease: 'power2.inOut'
         });
 
-        //Create card, add styles and content here
+        //Create card and add content
         card.classList.add('bg-white', 'rounded-md', 'p-4', 'cursor-pointer');
         card.innerHTML = `
             <img class="w-full rounded-md" src="${member.image}" alt="${member.name}">
-            <h3 class="mt-2 text-center text-base">${member.name}</h3>
+            <h3 class="mt-2 text-center text-base text-dirt">${member.name}</h3>
           `;
 
         // Animate cards in on load
         animateCardEntrance(card, index);
 
+        // On mouse enter
         card.addEventListener('mouseenter', () => {
           animateCardHover(card, index, halfIndex);
-        }); // Event Listener
+        });
 
         // On mouse leave
         card.addEventListener('mouseleave', () => {
@@ -66,7 +69,7 @@ getData.addEventListener('click', () => {
           const firstName = member.name.split(' ')[0];
           // pass member name to step 2.
           showCharactersByFirstName(firstName);
-          // SCroll to next section
+          // Scroll to next section
           gsap.to(window, {
             duration: 0.5,
             scrollTo: '#results',
@@ -80,13 +83,24 @@ getData.addEventListener('click', () => {
     });
 
   //
+  //
   // search for firstName and show alternate characters.
+  //
+  //
   function showCharactersByFirstName(firstName) {
     const results = document.getElementById('results');
-    results.innerHTML = `
-  <h2 class="text-center pt-32 text-2xl text-white">
+    // Show header to section 2
+    if (firstName == 'Jerry') {
+      results.innerHTML = `
+  <h2 class="text-center pt-32 text-2xl text-white w-full lg:w-3/5 mx-auto">
+  Okay, so—get this—multiverse stuff. Which version of me, I mean ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
+  <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
+    } else {
+      results.innerHTML = `
+  <h2 class="text-center pt-32 text-2xl text-white w-full lg:w-3/5 mx-auto">
   Okay, so—get this—multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
-  <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList">Loading...</div>`;
+  <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
+    }
 
     // lets fetch content related to the first name
     fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
@@ -98,6 +112,18 @@ getData.addEventListener('click', () => {
         data.results.forEach((char, index) => {
           // Create cards and styles
           const card = document.createElement('div');
+
+          let cardBack = `<p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that’s cool.</p>`;
+
+          // If Beth
+          if (char.id == 4) {
+            cardBack = `<p>Beth’s your favorite? Yeah, same! I mean, if I didn’t say that, I’d probably be sleeping on the couch.</p>`;
+          }
+
+          // if Jerry
+          if (char.id == 5) {
+            cardBack = `<p>I’m your favorite? Oh jeez… Beth! Beth, did you hear that? Somebody actually likes me!</p>`;
+          }
           card.classList.add(
             'card',
             'relative',
@@ -117,21 +143,22 @@ getData.addEventListener('click', () => {
               </div>
 
               <div
-                class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden">
-                <p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that’s cool.</p>
+                class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+               ${cardBack}
               </div>
             </div>
             `;
           list.appendChild(card);
-          // Animate in
+          // Animate cards in
           animateCardEntrance(card, index);
 
-          let isClicked = false;
+          let isClicked = false; // tracks if card clicked
           let hoverTween = null; // Tracks hover animation
           let clickTween = null; // Tracks click animation
 
           let cardInner = card.querySelector('.card__inner');
 
+          // mouse enter
           card.addEventListener('mouseenter', () => {
             hoverTween = animateRelatedCardHover(
               cardInner,
@@ -140,6 +167,7 @@ getData.addEventListener('click', () => {
             );
           });
 
+          // mouse leave
           card.addEventListener('mouseleave', () => {
             hoverTween = animateRelatedCardHoverOut(
               cardInner,
@@ -148,6 +176,7 @@ getData.addEventListener('click', () => {
             );
           });
 
+          // mouse click
           card.addEventListener('click', () => {
             const result = animateRelatedCardClick(
               cardInner,
@@ -160,6 +189,7 @@ getData.addEventListener('click', () => {
           });
         });
       })
+      // Error  message
       .catch(() => {
         document.getElementById('relatedList').textContent =
           'No characters? Great. Just great. I probably messed something up, didn’t I?';
@@ -167,7 +197,8 @@ getData.addEventListener('click', () => {
   }
 });
 
-// Animation helpers
+// Animations for family
+//
 function animateCardEntrance(card, index) {
   const randomAngle = randomRotation();
   gsap.from(card, {
@@ -187,7 +218,8 @@ function animateCardHover(card, index, halfIndex) {
     duration: 0.3,
     backgroundColor: '#7CE158', // Green
     scale: 1.02,
-    opacity: 1
+    opacity: 1,
+    autoAlpha: 1
   });
   if (index < halfIndex) {
     gsap.to(card, {
@@ -215,12 +247,14 @@ function animateCardHoverOut(card) {
   });
 }
 
-// Related card animation helpers
+// Animations for related cards
+//
 // Mouse OVER card
 function animateRelatedCardHover(cardInner, isClicked, hoverTween) {
   const randomAngle = randomRotation();
   if (isClicked) return hoverTween;
   if (hoverTween) hoverTween.kill();
+  //
   return gsap.to(cardInner, {
     scale: 1,
     duration: 0.3,
@@ -230,9 +264,12 @@ function animateRelatedCardHover(cardInner, isClicked, hoverTween) {
 }
 // Mouse OUT card
 function animateRelatedCardHoverOut(cardInner, isClicked, hoverTween) {
+  //
   const randomAngle = randomRotation();
+  //
   if (isClicked) return hoverTween;
   if (hoverTween) hoverTween.kill();
+  //
   return gsap.to(cardInner, {
     scale: 1,
     backgroundColor: '#ffffff', // white
@@ -243,26 +280,39 @@ function animateRelatedCardHoverOut(cardInner, isClicked, hoverTween) {
   });
 }
 
-// Click and rotate the card
+// Click
 function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
   let newIsClicked = !isClicked;
   if (hoverTween) hoverTween.kill();
   if (clickTween) clickTween.kill();
   let newClickTween;
   if (newIsClicked) {
+    // Show back of card
     newClickTween = gsap.to(cardInner, {
       rotationY: 180,
       scale: 1,
       duration: 0.8,
+      delay: 0,
       ease: 'power2.inOut'
     });
   } else {
+    // Show the front card
     newClickTween = gsap.to(cardInner, {
       rotationY: 0,
       scale: 1,
       duration: 0.8,
+      delay: 0,
       ease: 'power2.inOut'
     });
+    // mobile since there is no mouse leave
+    gsap.to(
+      cardInner,
+      {
+        backgroundColor: '#ffffff',
+        duration: 0.8
+      },
+      '+=1'
+    );
   }
   return { isClicked: newIsClicked, clickTween: newClickTween };
 }
