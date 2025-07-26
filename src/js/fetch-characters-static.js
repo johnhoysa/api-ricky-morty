@@ -8,11 +8,14 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // On card click add class
+const relatedList = document.querySelector('#relatedList');
 const cards = document.querySelectorAll('#relatedList li.card');
 console.log('cards', cards);
 
 cards.forEach((clickedCard) => {
   clickedCard.addEventListener('click', () => {
+    // click a card and hide non clicked cards
+    //
     cards.forEach((card) => {
       if (card !== clickedCard) {
         card.classList.add('fade-out');
@@ -38,9 +41,24 @@ cards.forEach((clickedCard) => {
               x: 0,
               ease: 'power1.out'
             });
+            //
+            // add button to reset
+            relatedList.insertAdjacentHTML(
+              'afterend',
+              '<button id="resetApp" class="block text-center mx-auto mt-8 px-4 py-2 border-2 border-[#7CE158] text-white rounded transition-colors duration-300 hover:bg-[#7CE158] hover:text-white  bg-[#22A2BD]">Pick another Favorite?</button>'
+            );
+            //
+            const resetApp = document.querySelector('#resetApp');
+            resetApp.addEventListener('click', () => {
+              console.log('reset asked for');
+            });
           }
         });
       }
-    });
-  });
-});
+      //
+    }); // end of if clicked
+    //
+
+    //
+  }); // end of event listener
+}); // end of CARDS
