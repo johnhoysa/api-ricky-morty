@@ -10,97 +10,355 @@
 <body class="static p-0 text-base font-primary bg-dirt">
   <!-- Static HTML so I am not pulling data from the API as often -->
   <!-- Scratch pad like area for testing code -->
-  <div class="mx-auto max-w-xl p-8">
-    <h1 class=" flex flex-col md:flex-row items-center justify-center mt-8 text-3xl font-bold text-white">
-      <span>Welcome to the</span>
-      <img src="./assets/images/rick-and-morty-logo.png" width="" height="" alt="Ricky &amp; Morty">
-      <span>Character Selector!</span>
-    </h1>
-    <div class="mx-auto mt-8 w-3/4 lg:w-2/5 ">
-      <ul class="text-white list-disc">
-        <li>Choose your favorite character from the list below.</li>
-        <li>Based on your choice, we’ll show you variations or related versions.</li>
-        <li>Pick your favorite again!</li>
-      </ul>
-      <button id="letsStart"
-        class="mt-8 px-4 py-2 border-2 border-[#7CE158] text-white rounded transition-colors duration-300 hover:bg-[#7CE158] hover:text-white  bg-[#22A2BD]"
-        disabled="">Ready
-        to get
-        Started?</button>
-    </div>
-  </div>
 
-  <div id="app" class="mx-auto max-w-xl p-8">
-    <h2 class="mt-20 text-2xl text-center text-white">Which is your favorite character?</h2>
-    <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards">
 
-      <div class="card relative w-52 h-80 perspective cursor-pointer">
+  <section class="mt-8 results" id="results">
+    <h2 class="text-center pt-32 text-2xl text-white w-full lg:w-3/5 mx-auto">
+      Okay, so—get this—multiverse stuff. Which version of the Morty is, uh, your favorite? No wrong answers! Except
+      maybe some.</h2>
+    <ul class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
         <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
-          <!-- Front -->
-          <div
-            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl  backface-hidden">
-            <img class="w-full  rounded-md" src="./assets/images/2.png" alt="Morty Smith">
-            <h3 class="mt-2 text-center text-base">Morty Smith</h3>
-          </div>
-          <!-- Back -->
-          <div
-            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-2xl  rotate-y-180 backface-hidden">
-            Back of card testing, no content yet
-          </div>
-        </div>
-      </div>
-
-      <div class="card relative w-52 h-80 perspective cursor-pointer">
-        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
-          <!-- Front -->
-          <div
-            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl  backface-hidden">
-            <img class="w-full  rounded-md" src="./assets/images/2.png" alt="Morty Smith">
-            <h3 class="mt-2 text-center text-base">Morty Smith</h3>
-          </div>
-          <!-- Back -->
-          <div
-            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-2xl  rotate-y-180 backface-hidden">
-            Back of card testing, no content yet
-          </div>
-        </div>
-      </div>
-
-      <div class="card relative w-52 h-80 perspective cursor-pointer">
-        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
-          <!-- Front -->
-          <div
-            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl  backface-hidden">
-            <img class="w-full  rounded-md" src="./assets/images/2.png" alt="Morty Smith">
-            <h3 class="mt-2 text-center text-base">Morty Smith</h3>
-          </div>
-          <!-- Back -->
-          <div
-            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-2xl  rotate-y-180 backface-hidden">
-            Back of card testing, no content yet
-          </div>
-        </div>
-      </div>
-
-      <div class="card relative w-52 h-80 perspective cursor-pointer">
-        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
-          <!-- Front -->
           <div
             class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
-            <img class="w-full  rounded-md" src="./assets/images/2.png" alt="Morty Smith">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/2.jpeg"
+              alt="Morty Smith">
             <h3 class="mt-2 text-center text-base">Morty Smith</h3>
+            <p class="text-sm">Human</p>
           </div>
-          <!-- Back -->
+
           <div
-            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-2xl bg-red-500 rounded-lg rotate-y-180 backface-hidden">
-            Back of card testing, no content yet
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Morty Smith is your favorite? Uh… okay. A Human from unknown, that's currently Alive. I… I guess
+              that’s cool.</p>
           </div>
         </div>
-      </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/14.jpeg"
+              alt="Alien Morty">
+            <h3 class="mt-2 text-center text-base">Alien Morty</h3>
+            <p class="text-sm">Alien</p>
+          </div>
 
-    </div> <!-- end Grid -->
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Alien Morty is your favorite? Uh… okay. A Alien from unknown, that's currently unknown. I… I
+              guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/18.jpeg"
+              alt="Antenna Morty">
+            <h3 class="mt-2 text-center text-base">Antenna Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
 
-  </div>
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Antenna Morty is your favorite? Uh… okay. A Human from unknown, that's currently Alive. I… I
+              guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/21.jpeg"
+              alt="Aqua Morty">
+            <h3 class="mt-2 text-center text-base">Aqua Morty</h3>
+            <p class="text-sm">Humanoid</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Aqua Morty is your favorite? Uh… okay. A Humanoid from unknown, that's currently unknown. I… I
+              guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/27.jpeg"
+              alt="Artist Morty">
+            <h3 class="mt-2 text-center text-base">Artist Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Artist Morty is your favorite? Uh… okay. A Human from unknown, that's currently Alive. I… I guess
+              that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/42.jpeg"
+              alt="Big Head Morty">
+            <h3 class="mt-2 text-center text-base">Big Head Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Big Head Morty is your favorite? Uh… okay. A Human from unknown, that's currently unknown. I… I
+              guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/43.jpeg"
+              alt="Big Morty">
+            <h3 class="mt-2 text-center text-base">Big Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Big Morty is your favorite? Uh… okay. A Human from unknown, that's currently Dead. I… I guess
+              that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/44.jpeg"
+              alt="Body Guard Morty">
+            <h3 class="mt-2 text-center text-base">Body Guard Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Body Guard Morty is your favorite? Uh… okay. A Human from unknown, that's currently Dead. I… I
+              guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/53.jpeg"
+              alt="Blue Shirt Morty">
+            <h3 class="mt-2 text-center text-base">Blue Shirt Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Blue Shirt Morty is your favorite? Uh… okay. A Human from unknown, that's currently unknown. I… I
+              guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/61.jpeg"
+              alt="Campaign Manager Morty">
+            <h3 class="mt-2 text-center text-base">Campaign Manager Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Campaign Manager Morty is your favorite? Uh… okay. A Human from unknown, that's currently Dead.
+              I… I guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/73.jpeg"
+              alt="Cop Morty">
+            <h3 class="mt-2 text-center text-base">Cop Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Cop Morty is your favorite? Uh… okay. A Human from unknown, that's currently Dead. I… I guess
+              that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/77.jpeg"
+              alt="Cowboy Morty">
+            <h3 class="mt-2 text-center text-base">Cowboy Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Cowboy Morty is your favorite? Uh… okay. A Human from unknown, that's currently Alive. I… I guess
+              that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/83.jpeg"
+              alt="Cronenberg Morty">
+            <h3 class="mt-2 text-center text-base">Cronenberg Morty</h3>
+            <p class="text-sm">Cronenberg</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Cronenberg Morty is your favorite? Uh… okay. A Cronenberg from Cronenberg Earth, that's currently
+              unknown. I… I guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/84.jpeg"
+              alt="Cult Leader Morty">
+            <h3 class="mt-2 text-center text-base">Cult Leader Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Cult Leader Morty is your favorite? Uh… okay. A Human from unknown, that's currently Alive. I… I
+              guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/85.jpeg"
+              alt="Cyclops Morty">
+            <h3 class="mt-2 text-center text-base">Cyclops Morty</h3>
+            <p class="text-sm">Humanoid</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Cyclops Morty is your favorite? Uh… okay. A Humanoid from unknown, that's currently Alive. I… I
+              guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/95.jpeg"
+              alt="Dipper and Mabel Mortys">
+            <h3 class="mt-2 text-center text-base">Dipper and Mabel Mortys</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Dipper and Mabel Mortys is your favorite? Uh… okay. A Human from unknown, that's currently
+              unknown. I… I guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/113.jpeg"
+              alt="Eric Stoltz Mask Morty">
+            <h3 class="mt-2 text-center text-base">Eric Stoltz Mask Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Eric Stoltz Mask Morty is your favorite? Uh… okay. A Human from Eric Stoltz Mask Earth, that's
+              currently unknown. I… I guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/118.jpeg"
+              alt="Evil Morty">
+            <h3 class="mt-2 text-center text-base">Evil Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Evil Morty is your favorite? Uh… okay. A Human from unknown, that's currently Alive. I… I guess
+              that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/123.jpeg"
+              alt="Fat Morty">
+            <h3 class="mt-2 text-center text-base">Fat Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Fat Morty is your favorite? Uh… okay. A Human from unknown, that's currently Alive. I… I guess
+              that’s cool.</p>
+          </div>
+        </div>
+      </li>
+      <li class="card relative w-52 h-80 perspective cursor-pointer rounded-lg">
+        <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
+          <div
+            class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
+            <img class="w-full  rounded-md" src="https://rickandmortyapi.com/api/character/avatar/143.jpeg"
+              alt="Glasses Morty">
+            <h3 class="mt-2 text-center text-base">Glasses Morty</h3>
+            <p class="text-sm">Human</p>
+          </div>
+
+          <div
+            class="card__back absolute p-4 inset-0 flex justify-center items-center text-black text-sm rounded-lg rotate-y-180 backface-hidden bg-[#22A2BD]">
+            <p>Oh wow, Glasses Morty is your favorite? Uh… okay. A Human from unknown, that's currently Alive. I… I
+              guess that’s cool.</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </section>
 
   <script src="./dist/js/index.js"></script>
 
