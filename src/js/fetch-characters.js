@@ -192,7 +192,7 @@ getData.addEventListener('click', () => {
       // Error  message
       .catch(() => {
         document.getElementById('relatedList').textContent =
-          'No characters? Great. Just great. I probably messed something up, didn’t I?';
+          `No characters? Great. Just great. I probably messed something up, didn't I?`;
       });
   }
 });
