@@ -295,26 +295,7 @@ function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
       delay: 0,
       ease: 'power2.inOut'
     });
-  } else {
-    // Show the front card
-    newClickTween = gsap.to(cardInner, {
-      rotationY: 0,
-      scale: 1,
-      duration: 0.8,
-      delay: 0,
-      ease: 'power2.inOut'
-    });
-    // mobile since there is no mouse leave
-    gsap.to(
-      cardInner,
-      {
-        backgroundColor: '#ffffff',
-        duration: 0.8
-      },
-      '+=1'
-    );
   }
-  return { isClicked: newIsClicked, clickTween: newClickTween };
 }
 
 // Create a random number to help animate cards
