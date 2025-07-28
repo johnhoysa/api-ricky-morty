@@ -10,17 +10,25 @@ const getData = document.getElementById('letsStart'); // Rename this variable an
 const appContainer = document.getElementById('appRickMorty');
 // add intial html to page
 const html = `
-  <h2 class="mt-20 text-2xl text-center text-white">Who’s your favorite? Don’t say Rick. Or do. Whatever. It’s fine.</h2>
+  <h2 class="mt-20 text-2xl text-center text-white">Who's your favorite? Don't say Rick. Or do. Whatever. It's fine.</h2>
   <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-5" id="familyCards" aria-live="polite"></div>
-  <div class="mt-8 results" id="results"></div>
+  <div class="mt-20 results" id="results"></div>
 `;
 
 // Button action
 getData.addEventListener('click', () => {
   // Disable
   getData.disabled = true;
-
   appContainer.innerHTML = html;
+
+  // if user requested a reset, place the element back in place
+  gsap.to(appContainer, {
+    opacity: 1,
+    y: 0,
+    backgroundColor: 'transparent',
+    duration: 0,
+    ease: 'ease.out'
+  });
 
   // 1-5 are the family members
   const familyIds = [1, 2, 3, 4, 5];
@@ -38,11 +46,6 @@ getData.addEventListener('click', () => {
         const halfIndex = Math.floor(family.length / 2);
 
         // once data is received scroll user to the section
-        gsap.to(window, {
-          duration: 0.5,
-          scrollTo: appContainer,
-          ease: 'power2.inOut'
-        });
 
         //Create card and add content
         card.classList.add('bg-white', 'rounded-md', 'p-4', 'cursor-pointer');
@@ -50,6 +53,12 @@ getData.addEventListener('click', () => {
             <img class="w-full rounded-md" src="${member.image}" alt="${member.name}">
             <h3 class="mt-2 text-center text-base text-dirt">${member.name}</h3>
           `;
+
+        gsap.to(window, {
+          duration: 0.5,
+          scrollTo: { y: '#appRickMorty', offsetY: -50 },
+          ease: 'power2.inOut'
+        });
 
         // Animate cards in on load
         animateCardEntrance(card, index);
@@ -72,7 +81,8 @@ getData.addEventListener('click', () => {
           // Scroll to next section
           gsap.to(window, {
             duration: 0.5,
-            scrollTo: '#results',
+            // scrollTo: '#results',
+            scrollTo: { y: '#results', offsetY: -50 },
             delay: 0.5,
             ease: 'ease.inOut'
           });
@@ -92,13 +102,13 @@ getData.addEventListener('click', () => {
     // Show header to section 2
     if (firstName == 'Jerry') {
       results.innerHTML = `
-  <h2 class="text-center pt-32 text-2xl text-white w-full lg:w-3/5 mx-auto">
-  Okay, so—get this—multiverse stuff. Which version of me, I mean ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
+  <h2 class="text-center mt-20 text-2xl text-white w-full lg:w-3/5 mx-auto">
+  Okay, so, get this, multiverse stuff. Which version of me, I mean ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
   <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
     } else {
       results.innerHTML = `
   <h2 class="text-center pt-32 text-2xl text-white w-full lg:w-3/5 mx-auto">
-  Okay, so—get this—multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
+  Okay, so, get this, multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
   <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
     }
 
@@ -113,16 +123,16 @@ getData.addEventListener('click', () => {
           // Create cards and styles
           const card = document.createElement('div');
 
-          let cardBack = `<p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that’s cool.</p>`;
+          let cardBack = `<p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that's cool.</p>`;
 
           // If Beth
           if (char.id == 4) {
-            cardBack = `<p>Beth’s your favorite? Yeah, same! I mean, if I didn’t say that, I’d probably be sleeping on the couch.</p>`;
+            cardBack = `<p>Beth's your favorite? Yeah, same! I mean, if I didn't say that, I'd probably be sleeping on the couch.</p>`;
           }
 
           // if Jerry
           if (char.id == 5) {
-            cardBack = `<p>I’m your favorite? Oh jeez… Beth! Beth, did you hear that? Somebody actually likes me!</p>`;
+            cardBack = `<p>I'm your favorite? Oh jeez… Beth! Beth, did you hear that? Somebody actually likes me!</p>`;
           }
           card.classList.add(
             'card',
@@ -192,7 +202,7 @@ getData.addEventListener('click', () => {
       // Error  message
       .catch(() => {
         document.getElementById('relatedList').textContent =
-          'No characters? Great. Just great. I probably messed something up, didn’t I?';
+          `No characters? Great. Just great. I probably messed something up, didn't I?`;
       });
   }
 });
@@ -282,39 +292,115 @@ function animateRelatedCardHoverOut(cardInner, isClicked, hoverTween) {
 
 // Click
 function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
-  let newIsClicked = !isClicked;
+  // Toggle click state
+  const newIsClicked = !isClicked;
   if (hoverTween) hoverTween.kill();
   if (clickTween) clickTween.kill();
-  let newClickTween;
+  let newClickTween = clickTween;
+
   if (newIsClicked) {
-    // Show back of card
     newClickTween = gsap.to(cardInner, {
       rotationY: 180,
       scale: 1,
       duration: 0.8,
       delay: 0,
-      ease: 'power2.inOut'
+      ease: 'power2.inOut',
+      onComplete: () => fadeOutOtherRelatedCards(cardInner)
     });
   } else {
-    // Show the front card
+    // Optionally, animate flipping back to front
     newClickTween = gsap.to(cardInner, {
       rotationY: 0,
       scale: 1,
       duration: 0.8,
       delay: 0,
-      ease: 'power2.inOut'
+      ease: 'power2.inOut',
+      onComplete: () => restoreAllRelatedCards()
     });
-    // mobile since there is no mouse leave
-    gsap.to(
-      cardInner,
-      {
-        backgroundColor: '#ffffff',
-        duration: 0.8
-      },
-      '+=1'
-    );
   }
   return { isClicked: newIsClicked, clickTween: newClickTween };
+}
+
+// Helper: Fade out all other related cards except the clicked one
+function fadeOutOtherRelatedCards(clickedCardInner) {
+  const relatedList = document.querySelector('#relatedList');
+  const allCards = document.querySelectorAll('#relatedList > .card');
+  allCards.forEach((card) => {
+    const cardInner = card.querySelector('.card__inner');
+    if (cardInner === clickedCardInner) {
+      // ACTIVE CARD
+      card.classList.add('clicked-on');
+      gsap.to(card, {
+        y: 80,
+        scale: 1.2,
+        duration: 0.7,
+        ease: 'power1.out',
+        onComplete: () => {
+          gsap.to(card, {
+            scale: 1,
+            duration: 0.7,
+            y: 0,
+            ease: 'power1.out'
+          });
+          //
+          // add button to page to reset selection
+          relatedList.insertAdjacentHTML(
+            'afterend',
+            '<button id="resetApp" class="block text-center mx-auto mt-8 px-4 py-2 border-2 border-[#7CE158] text-white rounded transition-colors duration-300 hover:bg-[#7CE158] hover:text-white  bg-[#22A2BD]">Pick another Favorite?</button>'
+          );
+          //
+          const resetApp = document.querySelector('#resetApp');
+          resetApp.addEventListener('click', () => {
+            // scroll up and hide content that was there
+            gsap.to(window, {
+              duration: 1,
+              scrollTo: 'body',
+              onComplete: () => {
+                getData.disabled = false;
+                gsap.to(appContainer, {
+                  opacity: 0,
+                  y: 300,
+                  backgroundColor: 'transparent',
+                  duration: 0.7,
+                  ease: 'ease.out',
+                  onComplete: () => {
+                    appContainer.innerHTML = '';
+                  }
+                });
+              }
+            });
+          });
+        }
+      });
+    }
+    // CARDS TO FADE OUT
+    else {
+      card.classList.add('fade-me-out');
+      gsap.to(card, {
+        opacity: 0,
+        scale: 0.2,
+        duration: 0.7,
+        ease: 'power2.out',
+        onComplete: () => {
+          card.style.display = 'none';
+        }
+      });
+    }
+  });
+}
+
+// Helper: Restore all related cards to normal state
+function restoreAllRelatedCards() {
+  const allCards = document.querySelectorAll('.card__inner');
+  allCards.forEach((card) => {
+    card.classList.remove('faded-out');
+    gsap.to(card, {
+      opacity: 1,
+      filter: 'none',
+      duration: 0.5,
+      pointerEvents: 'auto'
+    });
+  });
 }
 
 // Create a random number to help animate cards
