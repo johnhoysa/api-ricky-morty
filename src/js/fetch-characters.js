@@ -103,12 +103,12 @@ getData.addEventListener('click', () => {
     if (firstName == 'Jerry') {
       results.innerHTML = `
   <h2 class="text-center mt-20 text-2xl text-white w-full lg:w-3/5 mx-auto">
-  Okay, so—get this—multiverse stuff. Which version of me, I mean ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
+  Okay, so, get this, multiverse stuff. Which version of me, I mean ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
   <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
     } else {
       results.innerHTML = `
   <h2 class="text-center pt-32 text-2xl text-white w-full lg:w-3/5 mx-auto">
-  Okay, so—get this—multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
+  Okay, so, get this, multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
   <div class="flex flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
     }
 
