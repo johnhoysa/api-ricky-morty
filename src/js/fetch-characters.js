@@ -24,6 +24,7 @@ getData.addEventListener('click', () => {
   // if user requested a reset, place the element back in place
   gsap.to(appContainer, {
     opacity: 1,
+    autoAlpha: 1,
     y: 0,
     backgroundColor: 'transparent',
     duration: 0,
@@ -56,8 +57,7 @@ getData.addEventListener('click', () => {
 
         gsap.to(window, {
           duration: 0.5,
-          scrollTo: { y: '#appRickMorty', offsetY: -50 },
-          ease: 'power2.inOut'
+          scrollTo: { y: '#appRickMorty', offsetY: -50 }
         });
 
         // Animate cards in on load
@@ -84,7 +84,7 @@ getData.addEventListener('click', () => {
             // scrollTo: '#results',
             scrollTo: { y: '#results', offsetY: -50 },
             delay: 0.5,
-            ease: 'ease.inOut'
+            ease: 'ease.out'
           });
         });
 
@@ -137,8 +137,10 @@ getData.addEventListener('click', () => {
           card.classList.add(
             'card',
             'relative',
-            'w-52',
-            'h-80',
+            'w-36',
+            'h-64',
+            'md:w-52',
+            'md:h-80',
             'perspective',
             'cursor-pointer',
             'rounded-lg'
@@ -147,7 +149,7 @@ getData.addEventListener('click', () => {
               <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
               <div
                 class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
-                <img class="w-full  rounded-md" src="${char.image}" alt="${char.name}">
+                <img class="w-full h-auto rounded-md" src="${char.image}" alt="${char.name}">
                 <h3 class="mt-2 text-center text-base">${char.name}</h3>
                 <p class="text-sm">${char.species}</p>
               </div>
@@ -216,8 +218,7 @@ function animateCardEntrance(card, index) {
     y: 50,
     opacity: 0,
     rotate: randomAngle,
-    delay: index * 0.2,
-    ease: 'power2.out'
+    delay: index * 0.2
   });
 }
 
@@ -269,7 +270,7 @@ function animateRelatedCardHover(cardInner, isClicked, hoverTween) {
     scale: 1,
     duration: 0.3,
     rotate: randomAngle,
-    ease: 'power1.out'
+    ease: 'ease.out'
   });
 }
 // Mouse OUT card
@@ -286,7 +287,7 @@ function animateRelatedCardHoverOut(cardInner, isClicked, hoverTween) {
     duration: 0.3,
     rotate: 0,
     rotate: 0,
-    ease: 'power1.in'
+    ease: 'ease.out'
   });
 }
 
@@ -304,7 +305,7 @@ function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
       scale: 1,
       duration: 0.8,
       delay: 0,
-      ease: 'power2.inOut',
+      ease: 'ease.out',
       onComplete: () => fadeOutOtherRelatedCards(cardInner)
     });
   } else {
@@ -314,7 +315,7 @@ function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
       scale: 1,
       duration: 0.8,
       delay: 0,
-      ease: 'power2.inOut',
+      ease: 'ease.out',
       onComplete: () => restoreAllRelatedCards()
     });
   }
@@ -334,13 +335,24 @@ function fadeOutOtherRelatedCards(clickedCardInner) {
         y: 108,
         scale: 1.2,
         duration: 0.7,
-        ease: 'power1.out',
+        ease: 'ease.out',
         onComplete: () => {
+          gsap.to(window, {
+            duration: 0.5,
+            scrollTo: { y: '#results', offsetY: 50 },
+            ease: 'ease.out'
+          });
+
           gsap.to(card, {
             scale: 1,
             duration: 0.7,
             y: 0,
-            ease: 'power1.out'
+            ease: 'ease.out',
+            onComplete: () => {
+              console.log('Party Time 1999');
+              // want cool animation here to celebrate choosing a favorite
+              //
+            }
           });
           //
           // add button to page to reset selection
@@ -380,7 +392,7 @@ function fadeOutOtherRelatedCards(clickedCardInner) {
         opacity: 0,
         scale: 0.2,
         duration: 0.7,
-        ease: 'power2.out',
+        ease: 'ease.out',
         onComplete: () => {
           card.style.display = 'none';
         }
