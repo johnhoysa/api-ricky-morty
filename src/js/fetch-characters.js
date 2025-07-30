@@ -57,7 +57,7 @@ getData.addEventListener('click', () => {
 
         gsap.to(window, {
           duration: 0.5,
-          scrollTo: { y: '#appRickMorty', offsetY: -50 }
+          scrollTo: { y: '#appRickMorty', offsetY: 300 }
         });
 
         // Animate cards in on load
@@ -82,7 +82,7 @@ getData.addEventListener('click', () => {
           gsap.to(window, {
             duration: 0.5,
             // scrollTo: '#results',
-            scrollTo: { y: '#results', offsetY: -50 },
+            scrollTo: { y: '#results', offsetY: 50 },
             delay: 0.5,
             ease: 'ease.out'
           });
