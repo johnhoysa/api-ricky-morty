@@ -16,138 +16,141 @@ const html = `
 `;
 
 // Button action
-getData.addEventListener('click', () => {
-  // Disable
-  getData.disabled = true;
-  appContainer.innerHTML = html;
+if (getData) {
+  getData.addEventListener('click', () => {
+    // Disable
+    getData.disabled = true;
+    appContainer.innerHTML = html;
 
-  // if user requested a reset, place the element back in place
-  gsap.to(appContainer, {
-    opacity: 1,
-    y: 0,
-    backgroundColor: 'transparent',
-    duration: 0,
-    ease: 'ease.out'
-  });
+    // if user requested a reset, place the element back in place
+    gsap.to(appContainer, {
+      opacity: 1,
+      autoAlpha: 1,
+      y: 0,
+      backgroundColor: 'transparent',
+      duration: 0,
+      ease: 'ease.out'
+    });
 
-  // 1-5 are the family members
-  const familyIds = [1, 2, 3, 4, 5];
-  const apiURL = `https://rickandmortyapi.com/api/character/${familyIds.join(',')}`;
+    // 1-5 are the family members
+    const familyIds = [1, 2, 3, 4, 5];
+    const apiURL = `https://rickandmortyapi.com/api/character/${familyIds.join(',')}`;
 
-  fetch(apiURL)
-    .then((res) => res.json())
-    .then((family) => {
-      const container = document.getElementById('familyCards');
-      // Create card for each member
-      family.forEach((member, index) => {
-        // Create each card
-        const card = document.createElement('div');
-        // create variable to determine which animation to use
-        const halfIndex = Math.floor(family.length / 2);
+    fetch(apiURL)
+      .then((res) => res.json())
+      .then((family) => {
+        const container = document.getElementById('familyCards');
+        // Create card for each member
+        family.forEach((member, index) => {
+          // Create each card
+          const card = document.createElement('div');
+          // create variable to determine which animation to use
+          const halfIndex = Math.floor(family.length / 2);
 
-        // once data is received scroll user to the section
+          // once data is received scroll user to the section
 
-        //Create card and add content
-        card.classList.add('bg-white', 'rounded-md', 'p-4', 'cursor-pointer');
-        card.innerHTML = `
+          //Create card and add content
+          card.classList.add('bg-white', 'rounded-md', 'p-4', 'cursor-pointer');
+          card.innerHTML = `
             <img class="w-full rounded-md" src="${member.image}" alt="${member.name}">
             <h3 class="mt-2 text-center text-base text-dirt">${member.name}</h3>
           `;
 
-        gsap.to(window, {
-          duration: 0.5,
-          scrollTo: { y: '#appRickMorty', offsetY: -50 },
-          ease: 'power2.inOut'
-        });
-
-        // Animate cards in on load
-        animateCardEntrance(card, index);
-
-        // On mouse enter
-        card.addEventListener('mouseenter', () => {
-          animateCardHover(card, index, halfIndex);
-        });
-
-        // On mouse leave
-        card.addEventListener('mouseleave', () => {
-          animateCardHoverOut(card);
-        });
-
-        // On card click
-        card.addEventListener('click', () => {
-          const firstName = member.name.split(' ')[0];
-          // pass member name to step 2.
-          showCharactersByFirstName(firstName);
-          // Scroll to next section
           gsap.to(window, {
             duration: 0.5,
-            // scrollTo: '#results',
-            scrollTo: { y: '#results', offsetY: -50 },
-            delay: 0.5,
-            ease: 'ease.inOut'
+            scrollTo: { y: '#appRickMorty', offsetY: 300 }
           });
+
+          // Animate cards in on load
+          animateCardEntrance(card, index);
+
+          // On mouse enter
+          card.addEventListener('mouseenter', () => {
+            animateCardHover(card, index, halfIndex);
+          });
+
+          // On mouse leave
+          card.addEventListener('mouseleave', () => {
+            animateCardHoverOut(card);
+          });
+
+          // On card click
+          card.addEventListener('click', () => {
+            const firstName = member.name.split(' ')[0];
+            // pass member name to step 2.
+            showCharactersByFirstName(firstName);
+            // Scroll to next section
+            gsap.to(window, {
+              duration: 0.5,
+              // scrollTo: '#results',
+              scrollTo: { y: '#results', offsetY: 50 },
+              delay: 0.5,
+              ease: 'ease.out'
+            });
+          });
+
+          container.appendChild(card);
         });
-
-        container.appendChild(card);
       });
-    });
 
-  //
-  //
-  // search for firstName and show alternate characters.
-  //
-  //
-  function showCharactersByFirstName(firstName) {
-    const results = document.getElementById('results');
-    // Show header to section 2
-    if (firstName == 'Jerry') {
-      results.innerHTML = `
+    //
+    //
+    // search for firstName and show alternate characters.
+    //
+    //
+    function showCharactersByFirstName(firstName) {
+      const results = document.getElementById('results');
+      // Show header to section 2
+      if (firstName == 'Jerry') {
+        results.innerHTML = `
   <h2 class="text-center mt-20 text-2xl text-white w-full lg:w-3/5 mx-auto">
   Okay, so, get this, multiverse stuff. Which version of me, I mean ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
   <div class="flex flex-wrap gap-6 justify-center mt-8 text-white" id="relatedList" aria-live="polite">Loading...</div>`;
-    } else {
-      results.innerHTML = `
+      } else {
+        results.innerHTML = `
   <h2 class="text-center pt-32 text-2xl text-white w-full lg:w-3/5 mx-auto">
   Okay, so, get this, multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
   <div class="flex text-white flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
-    }
+      }
 
-    // lets fetch content related to the first name
-    fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
-      .then((res) => res.json())
-      .then((data) => {
-        const list = document.getElementById('relatedList');
-        list.innerHTML = '';
+      // lets fetch content related to the first name
+      fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const list = document.getElementById('relatedList');
+          list.innerHTML = '';
 
-        data.results.forEach((char, index) => {
-          // Create cards and styles
-          const card = document.createElement('div');
+          data.results.forEach((char, index) => {
+            // Create cards and styles
+            const card = document.createElement('div');
 
-          let cardBack = `<p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that's cool.</p>`;
+            let cardBack = `<p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that's cool.</p>`;
 
-          // If Beth
-          if (char.id == 4) {
-            cardBack = `<p>Beth's your favorite? Yeah, same! I mean, if I didn't say that, I'd probably be sleeping on the couch.</p>`;
-          }
+            // If Beth
+            if (char.id == 4) {
+              cardBack = `<p>Beth's your favorite? Yeah, same! I mean, if I didn't say that, I'd probably be sleeping on the couch.</p>`;
+            }
 
-          // if Jerry
-          if (char.id == 5) {
-            cardBack = `<p>I'm your favorite? Oh jeez… Beth! Beth, did you hear that? Somebody actually likes me!</p>`;
-          }
-          card.classList.add(
-            'card',
-            'relative',
-            'w-52',
-            'h-80',
-            'perspective',
-            'cursor-pointer',
-            'rounded-lg'
-          );
-          card.innerHTML = `
+            // if Jerry
+            if (char.id == 5) {
+              cardBack = `<p>I'm your favorite? Oh jeez… Beth! Beth, did you hear that? Somebody actually likes me!</p>`;
+            }
+            card.classList.add(
+              'card',
+              'relative',
+              'w-36',
+              'h-64',
+              'md:w-52',
+              'md:h-80',
+              'perspective',
+              'cursor-pointer',
+              'rounded-lg'
+            );
+            card.innerHTML = `
               <div class="card__inner absolute inset-0 transition-transform duration-700 preserve-3d rounded-lg bg-white">
               <div
                 class="card__front p-4 absolute inset-0 flex flex-col justify-center items-center text-black text-2xl rounded-lg backface-hidden">
-                <img class="w-full  rounded-md" src="${char.image}" alt="${char.name}">
+                <img class="w-full h-auto rounded-md" src="${char.image}" alt="${char.name}">
                 <h3 class="mt-2 text-center text-base">${char.name}</h3>
                 <p class="text-sm">${char.species}</p>
               </div>
@@ -158,55 +161,55 @@ getData.addEventListener('click', () => {
               </div>
             </div>
             `;
-          list.appendChild(card);
-          // Animate cards in
-          animateCardEntrance(card, index);
+            list.appendChild(card);
+            // Animate cards in
+            animateCardEntrance(card, index);
 
-          let isClicked = false; // tracks if card clicked
-          let hoverTween = null; // Tracks hover animation
-          let clickTween = null; // Tracks click animation
+            let isClicked = false; // tracks if card clicked
+            let hoverTween = null; // Tracks hover animation
+            let clickTween = null; // Tracks click animation
 
-          let cardInner = card.querySelector('.card__inner');
+            let cardInner = card.querySelector('.card__inner');
 
-          // mouse enter
-          card.addEventListener('mouseenter', () => {
-            hoverTween = animateRelatedCardHover(
-              cardInner,
-              isClicked,
-              hoverTween
-            );
+            // mouse enter
+            card.addEventListener('mouseenter', () => {
+              hoverTween = animateRelatedCardHover(
+                cardInner,
+                isClicked,
+                hoverTween
+              );
+            });
+
+            // mouse leave
+            card.addEventListener('mouseleave', () => {
+              hoverTween = animateRelatedCardHoverOut(
+                cardInner,
+                isClicked,
+                hoverTween
+              );
+            });
+
+            // mouse click
+            card.addEventListener('click', () => {
+              const result = animateRelatedCardClick(
+                cardInner,
+                isClicked,
+                hoverTween,
+                clickTween
+              );
+              isClicked = result.isClicked;
+              clickTween = result.clickTween;
+            });
           });
-
-          // mouse leave
-          card.addEventListener('mouseleave', () => {
-            hoverTween = animateRelatedCardHoverOut(
-              cardInner,
-              isClicked,
-              hoverTween
-            );
-          });
-
-          // mouse click
-          card.addEventListener('click', () => {
-            const result = animateRelatedCardClick(
-              cardInner,
-              isClicked,
-              hoverTween,
-              clickTween
-            );
-            isClicked = result.isClicked;
-            clickTween = result.clickTween;
-          });
+        })
+        // Error  message
+        .catch(() => {
+          document.getElementById('relatedList').textContent =
+            `No characters? Great. Just great. I probably messed something up, didn't I?`;
         });
-      })
-      // Error  message
-      .catch(() => {
-        document.getElementById('relatedList').textContent =
-          `No characters? Great. Just great. I probably messed something up, didn't I?`;
-      });
-  }
-});
-
+    }
+  });
+}
 // Animations for family
 //
 function animateCardEntrance(card, index) {
@@ -216,8 +219,7 @@ function animateCardEntrance(card, index) {
     y: 50,
     opacity: 0,
     rotate: randomAngle,
-    delay: index * 0.2,
-    ease: 'power2.out'
+    delay: index * 0.2
   });
 }
 
@@ -269,7 +271,7 @@ function animateRelatedCardHover(cardInner, isClicked, hoverTween) {
     scale: 1,
     duration: 0.3,
     rotate: randomAngle,
-    ease: 'power1.out'
+    ease: 'ease.out'
   });
 }
 // Mouse OUT card
@@ -286,7 +288,7 @@ function animateRelatedCardHoverOut(cardInner, isClicked, hoverTween) {
     duration: 0.3,
     rotate: 0,
     rotate: 0,
-    ease: 'power1.in'
+    ease: 'ease.out'
   });
 }
 
@@ -304,7 +306,7 @@ function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
       scale: 1,
       duration: 0.8,
       delay: 0,
-      ease: 'power2.inOut',
+      ease: 'ease.out',
       onComplete: () => fadeOutOtherRelatedCards(cardInner)
     });
   } else {
@@ -314,7 +316,7 @@ function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
       scale: 1,
       duration: 0.8,
       delay: 0,
-      ease: 'power2.inOut',
+      ease: 'ease.out',
       onComplete: () => restoreAllRelatedCards()
     });
   }
@@ -334,13 +336,24 @@ function fadeOutOtherRelatedCards(clickedCardInner) {
         y: 108,
         scale: 1.2,
         duration: 0.7,
-        ease: 'power1.out',
+        ease: 'ease.out',
         onComplete: () => {
+          gsap.to(window, {
+            duration: 0.5,
+            scrollTo: { y: '#results', offsetY: 50 },
+            ease: 'ease.out'
+          });
+
           gsap.to(card, {
             scale: 1,
             duration: 0.7,
             y: 0,
-            ease: 'power1.out'
+            ease: 'ease.out',
+            onComplete: () => {
+              console.log('Party Time 1999');
+              // want cool animation here to celebrate choosing a favorite
+              //
+            }
           });
           //
           // add button to page to reset selection
@@ -380,7 +393,7 @@ function fadeOutOtherRelatedCards(clickedCardInner) {
         opacity: 0,
         scale: 0.2,
         duration: 0.7,
-        ease: 'power2.out',
+        ease: 'ease.out',
         onComplete: () => {
           card.style.display = 'none';
         }
