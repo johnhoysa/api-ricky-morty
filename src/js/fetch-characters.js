@@ -134,21 +134,35 @@ if (getData) {
             }
             // If Morty, human
             if (char.id == 2) {
-              cardBack = `<p>You picked Morty? That’s awesome! I mean, I raised him, y’know. Well—Beth and I. Mostly Beth. But I was there!</p>`;
+              cardBack = `<p>You picked Morty? That's awesome! I mean, I raised him, y'know. Well—Beth and I. Mostly Beth. But I was there!</p>`;
+            }
+            if (char.id == 118) {
+              cardBack = `<p>Wait… Morty's in charge of a shadow government now? Since when does he get to be the smart one?</p>`;
             }
             // If Summer, human
             if (char.id == 3) {
-              cardBack = `<p>Oh, totally! Summer’s awesome. Just yesterday she told me to ‘stop being weird’ and I was like… wow, strong leadership.</p>`;
+              cardBack = `<p>Oh, totally! Summer's awesome. Just yesterday she told me to 'stop being weird' and I was like… wow, strong leadership.</p>`;
             }
+            if (char.id == 338) {
+              cardBack = `<p>You know things are bad when your teenage daughter adapts to post-collapse society faster than you adapt to a standing desk.</p>`;
+            }
+
             // If Beth, human
             if (char.id == 4) {
               cardBack = `<p>Beth's your favorite? Yeah, same! I mean, if I didn't say that, I'd probably be sleeping on the couch.</p>`;
+            }
+            if (char.id == 667) {
+              cardBack = `<p>She's like Beth if Beth had no filter, no mercy, and absolutely no patience for me.</p>`;
             }
 
             // if Jerry, human
             if (char.id == 5) {
               cardBack = `<p>I'm your favorite? Oh jeez… Beth! Beth, did you hear that? Somebody actually likes me!</p>`;
             }
+            if (char.id == 310) {
+              cardBack = `<p>Wow, Self-Congratulatory Jerry? That guy gets it. We celebrate the small wins. Like waking up. And breathing.</p>`;
+            }
+
             card.classList.add(
               'card',
               'relative',
