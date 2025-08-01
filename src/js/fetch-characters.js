@@ -58,7 +58,7 @@ if (getData) {
 
           gsap.to(window, {
             duration: 0.5,
-            scrollTo: { y: '#appRickMorty', offsetY: 300 }
+            scrollTo: { y: '#appRickMorty', offsetY: 50 }
           });
 
           // Animate cards in on load
@@ -124,14 +124,28 @@ if (getData) {
             // Create cards and styles
             const card = document.createElement('div');
 
+            // Default message for card backs
             let cardBack = `<p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that's cool.</p>`;
 
-            // If Beth
+            // Create custom messages for specific characters
+            // If Rick, human
+            if (char.id == 1) {
+              cardBack = `<p>Oh. Rick? Yeah. Of course. Everyone loves Rick. Genius, multiverse, portal gun… blah blah blah.</p>`;
+            }
+            // If Morty, human
+            if (char.id == 2) {
+              cardBack = `<p>You picked Morty? That’s awesome! I mean, I raised him, y’know. Well—Beth and I. Mostly Beth. But I was there!</p>`;
+            }
+            // If Summer, human
+            if (char.id == 3) {
+              cardBack = `<p>Oh, totally! Summer’s awesome. Just yesterday she told me to ‘stop being weird’ and I was like… wow, strong leadership.</p>`;
+            }
+            // If Beth, human
             if (char.id == 4) {
               cardBack = `<p>Beth's your favorite? Yeah, same! I mean, if I didn't say that, I'd probably be sleeping on the couch.</p>`;
             }
 
-            // if Jerry
+            // if Jerry, human
             if (char.id == 5) {
               cardBack = `<p>I'm your favorite? Oh jeez… Beth! Beth, did you hear that? Somebody actually likes me!</p>`;
             }
@@ -362,27 +376,7 @@ function fadeOutOtherRelatedCards(clickedCardInner) {
             '<button id="resetApp" class="block text-center mx-auto mt-8 px-4 py-2 border-2 border-[#7CE158] text-white rounded transition-colors duration-300 hover:bg-[#7CE158] hover:text-white  bg-[#22A2BD]">Pick another Favorite?</button>'
           );
           //
-          const resetApp = document.querySelector('#resetApp');
-          resetApp.addEventListener('click', () => {
-            // scroll up and hide content that was there
-            gsap.to(window, {
-              duration: 1,
-              scrollTo: 'body',
-              onComplete: () => {
-                getData.disabled = false;
-                gsap.to(appContainer, {
-                  opacity: 0,
-                  y: 300,
-                  backgroundColor: 'transparent',
-                  duration: 0.7,
-                  ease: 'ease.out',
-                  onComplete: () => {
-                    appContainer.innerHTML = '';
-                  }
-                });
-              }
-            });
-          });
+          resetCards();
         }
       });
     }
@@ -399,6 +393,30 @@ function fadeOutOtherRelatedCards(clickedCardInner) {
         }
       });
     }
+  });
+}
+// Helper: Restore all related cards to normal state
+function resetCards() {
+  const resetApp = document.querySelector('#resetApp');
+  resetApp.addEventListener('click', () => {
+    // scroll up and hide content that was there
+    gsap.to(window, {
+      duration: 1,
+      scrollTo: 'body',
+      onComplete: () => {
+        getData.disabled = false;
+        gsap.to(appContainer, {
+          opacity: 0,
+          y: 300,
+          backgroundColor: 'transparent',
+          duration: 0.7,
+          ease: 'ease.out',
+          onComplete: () => {
+            appContainer.innerHTML = '';
+          }
+        });
+      }
+    });
   });
 }
 
