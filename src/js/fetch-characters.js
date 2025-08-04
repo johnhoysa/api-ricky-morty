@@ -6,7 +6,7 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // get family members using API
-const getData = document.getElementById('letsStart'); // Rename this variable and element
+const startButton = document.getElementById('letsStart');
 const appContainer = document.getElementById('appRickMorty');
 // add intial html to page
 const html = `
@@ -16,10 +16,10 @@ const html = `
 `;
 
 // Button action
-if (getData) {
-  getData.addEventListener('click', () => {
+if (startButton) {
+  startButton.addEventListener('click', () => {
     // Disable
-    getData.disabled = true;
+    startButton.disabled = true;
     appContainer.innerHTML = html;
 
     // if user requested a reset, place the element back in place
@@ -44,7 +44,7 @@ if (getData) {
         family.forEach((member, index) => {
           // Create each card
           const card = document.createElement('div');
-          // create variable to determine which animation to use
+          // create variable to determine which animation to use based on order
           const halfIndex = Math.floor(family.length / 2);
 
           // once data is received scroll user to the section
@@ -56,9 +56,10 @@ if (getData) {
             <h3 class="mt-2 text-center text-base text-dirt">${member.name}</h3>
           `;
 
+          // Scroll to see app
           gsap.to(window, {
             duration: 0.5,
-            scrollTo: { y: '#appRickMorty', offsetY: 300 }
+            scrollTo: { y: '#appRickMorty', offsetY: 124 }
           });
 
           // Animate cards in on load
@@ -83,7 +84,7 @@ if (getData) {
             gsap.to(window, {
               duration: 0.5,
               // scrollTo: '#results',
-              scrollTo: { y: '#results', offsetY: 50 },
+              scrollTo: { y: '#results', offsetY: 124 },
               delay: 0.5,
               ease: 'ease.out'
             });
@@ -91,6 +92,11 @@ if (getData) {
 
           container.appendChild(card);
         });
+      })
+      .catch(() => {
+        if (appContainer) {
+          appContainer.innerHTML = `<h2 class="text-center text-red-400 py-8">Nothing loaded? Great. Just great. I probably messed something up, didn't I?</h2>`;
+        }
       });
 
     //
@@ -100,20 +106,26 @@ if (getData) {
     //
     function showCharactersByFirstName(firstName) {
       const results = document.getElementById('results');
-      // Show header to section 2
+      // Show header to section 2, show custom header based on firstName
       if (firstName == 'Jerry') {
         results.innerHTML = `
-  <h2 class="text-center mt-20 text-2xl text-white w-full lg:w-3/5 mx-auto">
+  <h2 class="text-center text-2xl text-white w-full lg:w-3/5 mx-auto">
   Okay, so, get this, multiverse stuff. Which version of me, I mean ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
-  <div class="flex flex-wrap gap-6 justify-center mt-8 text-white" id="relatedList" aria-live="polite">Loading...</div>`;
-      } else {
+  <div class="flex flex-wrap gap-6 justify-center mt-8 text-white" id="relatedList" aria-live="polite">Please pick me...</div>`;
+      } else if (firstName == 'Rick') {
         results.innerHTML = `
-  <h2 class="text-center pt-32 text-2xl text-white w-full lg:w-3/5 mx-auto">
+  <h2 class="text-center text-2xl text-white w-full lg:w-3/5 mx-auto">
+  WOh. Oh, okay. So I specifically asked you not to pick ${firstName}… and then you picked ${firstName}. That's fine. That's totally fine. I'm not crying—you're crying.</h2>
+  <div class="flex flex-wrap gap-6 justify-center mt-8 text-white" id="relatedList" aria-live="polite">Loading more Ricks...</div>`;
+      } else {
+        // Default message
+        results.innerHTML = `
+  <h2 class="text-center text-2xl text-white w-full lg:w-3/5 mx-auto">
   Okay, so, get this, multiverse stuff. Which version of the ${firstName} is, uh, your favorite? No wrong answers! Except maybe some.</h2>
   <div class="flex text-white flex-wrap gap-6 justify-center mt-8" id="relatedList" aria-live="polite">Loading...</div>`;
       }
 
-      // lets fetch content related to the first name
+      // Fetch content related to the first name
       fetch(`https://rickandmortyapi.com/api/character/?name=${firstName}`)
         .then((res) => res.json())
         .then((data) => {
@@ -124,17 +136,47 @@ if (getData) {
             // Create cards and styles
             const card = document.createElement('div');
 
+            // Default message for card backs
             let cardBack = `<p>Oh wow, ${char.name} is your favorite? Uh… okay. A ${char.species} from ${char.origin.name}, that's currently ${char.status}. I… I guess that's cool.</p>`;
 
-            // If Beth
+            // Create custom messages for specific characters
+            // If Rick, human
+            if (char.id == 1) {
+              cardBack = `<p>Oh. Rick? Yeah. Of course. Everyone loves Rick. Genius, multiverse, portal gun… blah blah blah.</p>`;
+            }
+            // If Morty, human
+            if (char.id == 2) {
+              cardBack = `<p>You picked Morty? That's awesome! I mean, I raised him, y'know. Well—Beth and I. Mostly Beth. But I was there!</p>`;
+            }
+            // random other character
+            if (char.id == 118) {
+              cardBack = `<p>Wait… Morty's in charge of a shadow government now? Since when does he get to be the smart one?</p>`;
+            }
+            // If Summer, human
+            if (char.id == 3) {
+              cardBack = `<p>Oh, totally! Summer's awesome. Just yesterday she told me to 'stop being weird' and I was like… wow, strong leadership.</p>`;
+            }
+            if (char.id == 338) {
+              cardBack = `<p>You know things are bad when your teenage daughter adapts to post-collapse society faster than you adapt to a standing desk.</p>`;
+            }
+
+            // If Beth, human
             if (char.id == 4) {
               cardBack = `<p>Beth's your favorite? Yeah, same! I mean, if I didn't say that, I'd probably be sleeping on the couch.</p>`;
             }
+            if (char.id == 667) {
+              cardBack = `<p>She's like Beth if Beth had no filter, no mercy, and absolutely no patience for me.</p>`;
+            }
 
-            // if Jerry
+            // if Jerry, human
             if (char.id == 5) {
               cardBack = `<p>I'm your favorite? Oh jeez… Beth! Beth, did you hear that? Somebody actually likes me!</p>`;
             }
+            if (char.id == 310) {
+              cardBack = `<p>Wow, Self-Congratulatory Jerry? That guy gets it. We celebrate the small wins. Like waking up. And breathing.</p>`;
+            }
+
+            // Create the cards for related characters
             card.classList.add(
               'card',
               'relative',
@@ -165,6 +207,8 @@ if (getData) {
             // Animate cards in
             animateCardEntrance(card, index);
 
+            // At one point I allowed the user to click on multiple cards but decided against it
+            // Left code in just in case I wanted to use it again
             let isClicked = false; // tracks if card clicked
             let hoverTween = null; // Tracks hover animation
             let clickTween = null; // Tracks click animation
@@ -205,13 +249,13 @@ if (getData) {
         // Error  message
         .catch(() => {
           document.getElementById('relatedList').textContent =
-            `No characters? Great. Just great. I probably messed something up, didn't I?`;
+            `<h2 class="text-center text-red-400 py-8">Nothing loaded? Great. Just great. I probably messed something up, didn't I?</h2>`;
         });
     }
   });
 }
-// Animations for family
-//
+// Animations for family cards
+// on load
 function animateCardEntrance(card, index) {
   const randomAngle = randomRotation();
   gsap.from(card, {
@@ -222,7 +266,7 @@ function animateCardEntrance(card, index) {
     delay: index * 0.2
   });
 }
-
+// mouse hover
 function animateCardHover(card, index, halfIndex) {
   gsap.killTweensOf(card);
   gsap.defaults({
@@ -233,6 +277,7 @@ function animateCardHover(card, index, halfIndex) {
     opacity: 1,
     autoAlpha: 1
   });
+  // Rotate cards differently based on relation to center item, Beth
   if (index < halfIndex) {
     gsap.to(card, {
       rotation: -4
@@ -248,6 +293,7 @@ function animateCardHover(card, index, halfIndex) {
   }
 }
 
+// Mouse out
 function animateCardHoverOut(card) {
   gsap.to(card, {
     scale: 1,
@@ -259,9 +305,10 @@ function animateCardHoverOut(card) {
   });
 }
 
+//
 // Animations for related cards
 //
-// Mouse OVER card
+// Mouse over card
 function animateRelatedCardHover(cardInner, isClicked, hoverTween) {
   const randomAngle = randomRotation();
   if (isClicked) return hoverTween;
@@ -274,7 +321,7 @@ function animateRelatedCardHover(cardInner, isClicked, hoverTween) {
     ease: 'ease.out'
   });
 }
-// Mouse OUT card
+// Mouse out card
 function animateRelatedCardHoverOut(cardInner, isClicked, hoverTween) {
   //
   const randomAngle = randomRotation();
@@ -292,7 +339,7 @@ function animateRelatedCardHoverOut(cardInner, isClicked, hoverTween) {
   });
 }
 
-// Click
+// Click card
 function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
   // Toggle click state
   const newIsClicked = !isClicked;
@@ -300,6 +347,7 @@ function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
   if (clickTween) clickTween.kill();
   let newClickTween = clickTween;
 
+  // If clicked
   if (newIsClicked) {
     newClickTween = gsap.to(cardInner, {
       rotationY: 180,
@@ -310,7 +358,8 @@ function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
       onComplete: () => fadeOutOtherRelatedCards(cardInner)
     });
   } else {
-    // Optionally, animate flipping back to front
+    // This is no longer in use but was part of my original plan
+    // Animate flipping back to front
     newClickTween = gsap.to(cardInner, {
       rotationY: 0,
       scale: 1,
@@ -323,7 +372,7 @@ function animateRelatedCardClick(cardInner, isClicked, hoverTween, clickTween) {
   return { isClicked: newIsClicked, clickTween: newClickTween };
 }
 
-// Helper: Fade out all other related cards except the clicked one
+// Fade out related cards except the clicked card
 function fadeOutOtherRelatedCards(clickedCardInner) {
   const relatedList = document.querySelector('#relatedList');
   const allCards = document.querySelectorAll('#relatedList > .card');
@@ -337,10 +386,11 @@ function fadeOutOtherRelatedCards(clickedCardInner) {
         scale: 1.2,
         duration: 0.7,
         ease: 'ease.out',
+        // Animate some more
         onComplete: () => {
           gsap.to(window, {
             duration: 0.5,
-            scrollTo: { y: '#results', offsetY: 50 },
+            scrollTo: { y: '#results', offsetY: 124 },
             ease: 'ease.out'
           });
 
@@ -350,39 +400,21 @@ function fadeOutOtherRelatedCards(clickedCardInner) {
             y: 0,
             ease: 'ease.out',
             onComplete: () => {
-              console.log('Party Time 1999');
+              console.log('Party like it is 1999');
               // want cool animation here to celebrate choosing a favorite
               //
             }
           });
-          //
+          // Disable further clicks
+          card.style.pointerEvents = 'none';
+          card.style.cursor = 'default';
           // add button to page to reset selection
           relatedList.insertAdjacentHTML(
             'afterend',
             '<button id="resetApp" class="block text-center mx-auto mt-8 px-4 py-2 border-2 border-[#7CE158] text-white rounded transition-colors duration-300 hover:bg-[#7CE158] hover:text-white  bg-[#22A2BD]">Pick another Favorite?</button>'
           );
           //
-          const resetApp = document.querySelector('#resetApp');
-          resetApp.addEventListener('click', () => {
-            // scroll up and hide content that was there
-            gsap.to(window, {
-              duration: 1,
-              scrollTo: 'body',
-              onComplete: () => {
-                getData.disabled = false;
-                gsap.to(appContainer, {
-                  opacity: 0,
-                  y: 300,
-                  backgroundColor: 'transparent',
-                  duration: 0.7,
-                  ease: 'ease.out',
-                  onComplete: () => {
-                    appContainer.innerHTML = '';
-                  }
-                });
-              }
-            });
-          });
+          resetCards();
         }
       });
     }
@@ -394,6 +426,7 @@ function fadeOutOtherRelatedCards(clickedCardInner) {
         scale: 0.2,
         duration: 0.7,
         ease: 'ease.out',
+        // hide the elements to move selected card into location
         onComplete: () => {
           card.style.display = 'none';
         }
@@ -402,7 +435,33 @@ function fadeOutOtherRelatedCards(clickedCardInner) {
   });
 }
 
-// Helper: Restore all related cards to normal state
+// Reset and scroll back to top
+function resetCards() {
+  const resetApp = document.querySelector('#resetApp');
+  resetApp.addEventListener('click', () => {
+    // scroll up and hide content that was there
+    gsap.to(window, {
+      duration: 1,
+      scrollTo: 'body',
+      // Hide family cards once scrolled back to top
+      onComplete: () => {
+        startButton.disabled = false;
+        gsap.to(appContainer, {
+          opacity: 0,
+          y: 300,
+          backgroundColor: 'transparent',
+          duration: 0.7,
+          ease: 'ease.out',
+          onComplete: () => {
+            appContainer.innerHTML = '';
+          }
+        });
+      }
+    });
+  });
+}
+
+// Restore all related cards to normal state
 function restoreAllRelatedCards() {
   const allCards = document.querySelectorAll('.card__inner');
   allCards.forEach((card) => {
